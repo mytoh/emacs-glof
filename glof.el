@@ -124,13 +124,13 @@
       (glof:dissoc (glof:dissoc p k)
                    k2 ks))))
 
-(cl-defun glof:alist (p)
+(cl-defun glof:alistify (p)
   (glof:map
    (pcase-lambda (`(,k ,v)) (cons k v))
    p))
 
 (cl-defun glof:sort-by (p)
-  (cl-letf* ((alist (glof:alist p))
+  (cl-letf* ((alist (glof:alistify p))
              (sorted
               (sort alist
                     (pcase-lambda (`(,a . ,_) `(,b . ,_))

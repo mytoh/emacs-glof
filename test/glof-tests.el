@@ -167,9 +167,9 @@
    (glof:select-keys '( :a 1 :b 2 :c 3) '( :a :c))
    '(:a 1 :c 3)))
 
-(ert-deftest glof-tests-alist ()
+(ert-deftest glof-tests-alistify ()
   (glof-test-helper-are
-   (glof:alist '(:a 1 :b 2 :c 3))
+   (glof:alistify '(:a 1 :b 2 :c 3))
    '((:a . 1) (:b . 2) (:c . 3))))
 
 (ert-deftest glof-tests-last ()
