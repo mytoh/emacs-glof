@@ -7,7 +7,7 @@
 
 (cl-defun glof:conj (&rest plists)
   (pcase plists
-    (`(nil nil) '())
+    (`(nil nil) (glof:empty))
     (`(nil ,x) x)
     (`(,p nil) p)
     (`(,p ,x)
@@ -34,7 +34,7 @@
 
 (cl-defun glof:get (p key &optional (default nil))
   (pcase p
-    (`() nil)
+    (`() (glof:empty))
     (`(,(and k
              (pred (cl-equalp key)))
         ,v)
@@ -62,7 +62,7 @@
 
 (cl-defun glof:keys (p)
   (pcase p
-    (`() '())
+    (`() (glof:empty))
     (`(,x . ,_)
       (thread-last p
         glof:rest
@@ -71,7 +71,7 @@
 
 (cl-defun glof:vals (p)
   (pcase p
-    (`() '())
+    (`() (glof:empty))
     (`(,_ ,x . ,_)
       (thread-last p
         glof:rest
@@ -86,7 +86,7 @@
                       (`()
                         (if (null flag)
                             (list key value)
-                          '()))
+                          (glof:empty)))
                       (`(,(pred (cl-equalp key)) . ,_)
                         (cl-list* key value (rec (glof:rest p) t)))
                       (_
@@ -109,7 +109,7 @@
       (apply #'glof:dissoc p ks))
     (`(,(and k
              (guard (seq-empty-p p))))
-      '())
+      (glof:empty))
     (`(,(and k
              (pred (cl-equalp (glof:key (glof:first p))))))
       (glof:rest p))
@@ -162,7 +162,7 @@
 
 (cl-defun glof:map (f p)
   (pcase p
-    (`() '())
+    (`() (glof:empty))
     (_
      (cons (funcall f (glof:first p))
            (glof:map f (glof:rest p))))))
@@ -175,13 +175,13 @@
 
 (cl-defun glof:last (p)
   (pcase p
-    (`() '())
+    (`() (glof:empty))
     (`(,k ,v) (glof:plist k v))
     (_ (glof:last (glof:rest p)))))
 
 (cl-defun glof:reduce (f p)
   (pcase p
-    (`() '())
+    (`() (glof:empty))
     (`(,_ ,_) p)
     (_
      (glof:reduce f
@@ -194,7 +194,7 @@
 
 (cl-defun glof:contains-p (p k)
   (pcase p
-    (`() '())
+    (`() (glof:empty))
     (`(,(and _
              (pred (cl-equalp k)))
         . ,_)
