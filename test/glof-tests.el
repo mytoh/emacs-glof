@@ -246,15 +246,17 @@
    nil))
 
 (ert-deftest glof-tests-keyify ()
-  (glof-test-helper-are
-   (glof:keyify :test) :test
-   (glof:keyify 'test) :test
-   (glof:keyify "test") :test))
+  (cl-letf ((expected :test))
+    (glof-test-helper-are
+     (glof:keyify :test) expected
+     (glof:keyify 'test) expected
+     (glof:keyify "test") expected)))
 
 (ert-deftest glof-tests-stringify()
-  (glof-test-helper-are
-   (glof:stringify :test) "test"
-   (glof:stringify 'test) "test"
-   (glof:stringify "test") "test"))
+  (cl-letf ((expected "test"))
+    (glof-test-helper-are
+     (glof:stringify :test) expected
+     (glof:stringify 'test) expected
+     (glof:stringify "test") expected)))
 
 ;;; glof-tests.el ends here
