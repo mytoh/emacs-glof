@@ -258,6 +258,9 @@
      (glof:stringify
       (glof:keyify thing)))))
 
+(cl-defun glof:empty (&optional x)
+  '())
+
 (provide 'glof)
 
 ;;; glof.el ends here
