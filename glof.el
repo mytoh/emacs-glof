@@ -255,8 +255,7 @@
      (seq-drop (symbol-name thing)
                1))
     (`symbol
-     (glof:stringify
-      (glof:keyify thing)))))
+     (symbol-name thing))))
 
 (cl-defun glof:empty (&optional x)
   '())
