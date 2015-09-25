@@ -250,7 +250,12 @@
     (glof-test-helper-are
      (glof:keyify :test) expected
      (glof:keyify 'test) expected
-     (glof:keyify "test") expected)))
+     (glof:keyify "test") expected))
+  ;; namespace
+  (cl-letf ((expected :user/test))
+    (glof-test-helper-are
+     (glof:keyify "user" "test") expected
+     (glof:keyify "user" 'test) expected)))
 
 (ert-deftest glof-tests-stringify()
   (cl-letf ((expected "test"))

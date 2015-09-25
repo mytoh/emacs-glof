@@ -235,18 +235,25 @@
                          (cdr ks) (cdr vs))))))
     (rec '() keys vals)))
 
-(cl-defun glof:keyify (thing)
-  (pcase (type-of thing)
-    ((and 'symbol
-          (guard (keywordp thing)))
-     thing)
-    (`symbol
-     (glof:keyify (symbol-name thing)))
-    ((and `string
-          type)
-     (intern (seq-concatenate 'string
-                              ":" thing)))))
-
+(cl-defun glof:keyify (&rest names)
+  (pcase names
+    (`(,thing)
+      (pcase (type-of thing)
+        ((and 'symbol
+              (guard (keywordp thing)))
+         thing)
+        (`symbol
+         (glof:keyify (symbol-name thing)))
+        ((and `string
+              type)
+         (intern (seq-concatenate 'string
+                                  ":" thing)))))
+    (`(,ns ,thing)
+      (intern (seq-concatenate 'string
+                               ":"
+                               (glof:stringify ns)
+                               "/"
+                               (glof:stringify thing))))))
 (cl-defun glof:stringify (thing)
   (pcase (type-of thing)
     (`string thing)
