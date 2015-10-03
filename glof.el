@@ -2,6 +2,9 @@
 
 ;;; Code:
 
+(require 'seq)
+(require 'subr-x)
+
 (cl-defun glof:plist (&rest kvs)
   (apply #'list kvs))
 
