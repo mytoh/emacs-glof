@@ -115,9 +115,9 @@
       (glof:rest p))
     (`(,(and k
              (guard (not (cl-equalp k (glof:key (glof:first p)))))))
-      (cl-list* (glof:key (glof:first p))
-                (glof:val (glof:first p))
-                (glof:dissoc (glof:rest p) k)))
+      (append
+       (glof:first p)
+       (glof:dissoc (glof:rest p) k)))
     (`(,k nil)
       (glof:dissoc p k))
     (`(,k ,k2 . ,ks)
