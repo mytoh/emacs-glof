@@ -42,14 +42,13 @@
 (cl-defun glof:get (p key &optional (default nil))
   (pcase p
     (`() (glof:empty))
-    (`(,(and k
-             (pred (cl-equalp key)))
+    (`(,(pred (cl-equalp key))
         ,v)
       v)
     (`(,(and k (guard (not (cl-equalp key k))))
         ,_)
       default)
-    (`(,(and k (pred (cl-equalp key)))
+    (`(,(pred (cl-equalp key))
         ,v . ,rest)
       v)
     (`(,(and k (guard (not (cl-equalp key k))))
@@ -202,8 +201,7 @@
 (cl-defun glof:contains-p (p k)
   (pcase p
     (`() (glof:empty))
-    (`(,(and _
-             (pred (cl-equalp k)))
+    (`(,(pred (cl-equalp k))
         . ,_)
       t)
     (`(,(and ki
