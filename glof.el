@@ -30,10 +30,14 @@
 
 
 (cl-defun glof:key (p)
-  (car p))
+  (pcase p
+    (`(,k ,v)
+      k)))
 
 (cl-defun glof:val (p)
-  (cadr p))
+  (pcase p
+    (`(,k ,v)
+      v)))
 
 (cl-defun glof:get (p key &optional (default nil))
   (pcase p
