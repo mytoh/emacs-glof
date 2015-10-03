@@ -233,9 +233,9 @@
                   (`(nil nil) plist)
                   (`(nil (,_ . ,_)) plist)
                   (`((,_ . ,_) nil) plist)
-                  (`(,ks ,vs)
-                    (rec (glof:assoc plist (car ks) (car vs))
-                         (cdr ks) (cdr vs))))))
+                  (`((,kf . ,kr) (,vf . ,vr))
+                    (rec (glof:assoc plist kf vf)
+                         kr vr)))))
     (rec '() keys vals)))
 
 (cl-defun glof:keyify (&rest names)
