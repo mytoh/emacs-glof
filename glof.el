@@ -240,6 +240,19 @@
                          kr vr)))))
     (rec '() keys vals)))
 
+(cl-defun glof:zipmap (keys vals)
+  ;; [[https://www.youtube.com/watch?v=n7aE6k8o_BU]]
+  (pcase `(,keys,vals)
+    (`(nil nil) nil)
+    (`(nil (,_ . ,_)) nil)
+    (`((,_ . ,_) nil) nil)
+    (`((,kf . ,kr) (,vf . ,vr))
+      (glof:conj (glof:zipmap kf vf)
+                 (glof:zipmap
+                  kr vr)))
+    (`(,k ,v)
+      (glof:assoc '() k v))))
+
 (cl-defun glof:keyify (&rest names)
   (pcase names
     (`(,thing)
