@@ -230,18 +230,6 @@
 
 (cl-defun glof:zipmap (keys vals)
   ;; [[https://www.youtube.com/watch?v=n7aE6k8o_BU]]
-  (cl-labels ((rec (plist kys vls)
-                (pcase `(,kys ,vls)
-                  (`(nil nil) plist)
-                  (`(nil (,_ . ,_)) plist)
-                  (`((,_ . ,_) nil) plist)
-                  (`((,kf . ,kr) (,vf . ,vr))
-                    (rec (glof:assoc plist kf vf)
-                         kr vr)))))
-    (rec '() keys vals)))
-
-(cl-defun glof:zipmap (keys vals)
-  ;; [[https://www.youtube.com/watch?v=n7aE6k8o_BU]]
   (pcase `(,keys,vals)
     (`(nil nil) nil)
     (`(nil (,_ . ,_)) nil)
