@@ -232,18 +232,16 @@
 
 (ert-deftest glof-tests-zipmap ()
   (glof-test-helper-are
-   (glof:zipmap '(:a :b :c) '(1 2 3))
-   (glof:plist :a 1 :b 2 :c 3)
-   (glof:zipmap '(:a :b :c) '(1 2))
-   (glof:plist :a 1 :b 2)
-   (glof:zipmap '(:a :b :c :d) '(1))
-   (glof:plist :a 1)
-   (glof:zipmap '(:a) '(1 2 3 4))
-   (glof:plist :a 1)
-   (glof:zipmap '() '())
-   nil
-   (glof:zipmap '(:a) '())
-   nil))
+   (glof:zipmap '(:a :b :c) '(1 2 3)) (glof:plist :a 1 :b 2 :c 3)
+   (glof:zipmap '(:a :b :c) '(1 2)) (glof:plist :a 1 :b 2)
+   (glof:zipmap '(:a :b :c :d) '(1)) (glof:plist :a 1)
+   (glof:zipmap '(:a) '(1 2 3 4)) (glof:plist :a 1)
+   (glof:zipmap '(:a :b) '((1) (2))) (glof:plist :a '(1) :b '(2))
+   (glof:zipmap '() '()) nil
+   (glof:zipmap '(:a) '()) nil
+   (glof:zipmap '(:a :b) '()) nil
+   (glof:zipmap '() '(:a)) nil
+   (glof:zipmap '() '(:a :b)) nil))
 
 (ert-deftest glof-tests-keyify ()
   (cl-letf ((expected :test))
