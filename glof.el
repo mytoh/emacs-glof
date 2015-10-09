@@ -228,6 +228,10 @@
         . ,_)
       default)))
 
+(cl-defun glof:update (p k f)
+  (glof:assoc p k
+              (funcall f (glof:get p k))))
+
 (cl-defun glof:zipmap (keys vals)
   ;; [[https://www.youtube.com/watch?v=n7aE6k8o_BU]]
   (pcase `(,keys,vals)

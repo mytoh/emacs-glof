@@ -262,4 +262,8 @@
      (glof:stringify 'test) expected
      (glof:stringify "test") expected)))
 
+(ert-deftest glof-tests-update ()
+  (glof-test-helper-are
+   (glof:update '(:a 1 :b 2) :b #'1+) '(:a 1 :b 3)))
+
 ;;; glof-tests.el ends here
