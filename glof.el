@@ -15,18 +15,18 @@
     (`(,p nil) p)
     (`(,p ,x)
       (glof:conj (glof:rest p)
-                 (cl-letf ((found (glof:contains-p
-                                   x (glof:key (glof:first p)))))
-                   (if found
-                       x
-                     (seq-concatenate 'list
-                                      (glof:first p)
-                                      x)))))
+              (cl-letf ((found (glof:contains-p
+                                x (glof:key (glof:first p)))))
+                (if found
+                    x
+                  (seq-concatenate 'list
+                                   (glof:first p)
+                                   x)))))
     (`(,p ,x nil)
       (glof:conj p x))
     (`(,p ,x ,x2 . ,xs)
       (glof:conj (glof:conj p x)
-                 x2 xs))))
+              x2 xs))))
 
 
 (cl-defun glof:key (p)
@@ -102,10 +102,16 @@
         (rec plist nil)))
     (`(,k ,v)
       (glof:assoc (glof:assoc plist key value)
-                  k  v))
+               k  v))
     (`(,k ,v . ,rkv)
       (apply #'glof:assoc (glof:assoc plist key value)
              k v rkv))))
+
+(cl-defun glof:assoc-in (p ks v)
+  (pcase ks
+    (`(,k) (glof:assoc p k v))
+    (`(,k . ,kr)
+      (glof:assoc p k (glof:assoc-in (glof:get p k) kr v)))))
 
 (cl-defun glof:dissoc (p &rest keys)
   (pcase keys
@@ -128,7 +134,7 @@
       (glof:dissoc p k))
     (`(,k ,k2 . ,ks)
       (glof:dissoc (glof:dissoc p k)
-                   k2 ks))))
+                k2 ks))))
 
 (cl-defun glof:alistify (p)
   (glof:map
@@ -191,9 +197,9 @@
     (`(,_ ,_) p)
     (_
      (glof:reduce f
-                  (glof:conj
-                   (funcall f (glof:first p) (glof:second p))
-                   (glof:rest (glof:rest p)))))))
+               (glof:conj
+                (funcall f (glof:first p) (glof:second p))
+                (glof:rest (glof:rest p)))))))
 
 (cl-defun glof:entry-p (p)
   (= 2 (seq-length p)))
@@ -222,7 +228,7 @@
              (pred (glof:contains-p p)))
         . ,kr)
       (glof:get-in (glof:get p k)
-                   kr default))
+                kr default))
     (`(,(and k
              (guard (not (glof:contains-p p k))))
         . ,_)
@@ -230,7 +236,7 @@
 
 (cl-defun glof:update (p k f)
   (glof:assoc p k
-              (funcall f (glof:get p k))))
+           (funcall f (glof:get p k))))
 
 (cl-defun glof:zipmap (keys vals)
   ;; [[https://www.youtube.com/watch?v=n7aE6k8o_BU]]
@@ -240,8 +246,8 @@
     (`((,_ . ,_) nil) nil)
     (`((,kf . ,kr) (,vf . ,vr))
       (glof:conj (glof:zipmap kf vf)
-                 (glof:zipmap
-                  kr vr)))
+              (glof:zipmap
+               kr vr)))
     (`(,k ,v)
       (glof:assoc '() k v))))
 
@@ -280,3 +286,8 @@
 (provide 'glof)
 
 ;;; glof.el ends here
+
+;; Local Variables:
+;; nameless-separator: ":" 
+;; nameless-current-name: "glof"
+;; End:
