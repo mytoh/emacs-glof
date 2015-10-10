@@ -49,10 +49,10 @@
         ,_)
       default)
     (`(,(pred (cl-equalp key))
-        ,v . ,rest)
+        ,v . ,_)
       v)
     (`(,(and k (guard (not (cl-equalp key k))))
-        ,_ . ,rest)
+        ,_ . ,_)
       (glof:get (glof:rest p) key default))))
 
 (cl-defun glof:first (p)
