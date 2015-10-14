@@ -253,23 +253,25 @@
 
 (cl-defun glof:keyify (&rest names)
   (pcase names
-    (`(,thing)
-      (pcase (type-of thing)
-        ((and 'symbol
-              (guard (keywordp thing)))
-         thing)
-        (`symbol
-         (glof:keyify (symbol-name thing)))
-        ((and `string
-              type)
-         (intern (seq-concatenate 'string
-                                  ":" thing)))))
     (`(,ns ,thing)
       (intern (seq-concatenate 'string
                                ":"
                                (glof:stringify ns)
                                "/"
-                               (glof:stringify thing))))))
+                               (glof:stringify thing))))
+    
+    (`(,(and (app type-of `symbol)
+             (pred keywordp)
+             thing))
+      thing)
+    (`(,(and (app type-of `symbol)
+             thing))
+      (glof:keyify (symbol-name thing)))
+    ( `(,(and (app type-of `string)
+              thing))
+       (intern (seq-concatenate 'string
+                                ":" thing)))))
+
 (cl-defun glof:stringify (thing)
   (pcase (type-of thing)
     (`string thing)
@@ -290,4 +292,5 @@
 ;; Local Variables:
 ;; nameless-separator: ":" 
 ;; nameless-current-name: "glof"
+;; eval: (nameless-mode)
 ;; End:
