@@ -283,7 +283,7 @@
      (symbol-name thing))))
 
 (cl-defun glof:empty (&optional x)
-  '())
+  ())
 
 (provide 'glof)
 

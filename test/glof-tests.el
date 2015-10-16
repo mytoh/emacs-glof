@@ -28,16 +28,16 @@
 (ert-deftest glof-tests-conj ()
   ;;; github.com/clojure/clojure/test/clojure/test_clojure/data_structures.clj without vector support
   (glof-test-helper-are
-   (glof:conj '() '()) '()
+   (glof:conj () ()) ()
 
-   (glof:conj '() '(:a 1)) '(:a 1)
+   (glof:conj () '(:a 1)) '(:a 1)
 
-   (glof:conj '() '(:a 1 :b 2)) '(:a 1 :b 2)
+   (glof:conj () '(:a 1 :b 2)) '(:a 1 :b 2)
 
-   (glof:sort-by (glof:conj '() '(:a 1 :b 2) '(:c 3)))
+   (glof:sort-by (glof:conj () '(:a 1 :b 2) '(:c 3)))
    '(:a 1 :b 2 :c 3)
 
-   (glof:sort-by (glof:conj '() '(:a 1 :b 2) '(:a 3 :c 4)))
+   (glof:sort-by (glof:conj () '(:a 1 :b 2) '(:a 3 :c 4)))
    '(:a 3 :b 2 :c 4)
 
    (glof:conj '(:a 1) '(:a 7)) '(:a 7)
@@ -52,7 +52,7 @@
    (glof:sort-by (glof:conj '(:a 1) '(:a 7 :b 2) '(:b 4 :c 5)))
    '(:a 7 :b 4 :c 5)
 
-   (glof:conj '() (glof:first '(:a 1)))
+   (glof:conj () (glof:first '(:a 1)))
    '(:a 1)
 
    (glof:conj '(:a 1) (glof:first '(:b 2)))
@@ -65,13 +65,13 @@
    '(:a 5 :b 2)
 
    ;; nil list check (not necessary?)
-   (glof:conj '() '(nil ()))
+   (glof:conj () '(nil ()))
    '(nil nil)
 
-   (glof:conj '() '(() nil))
+   (glof:conj () '(() nil))
    '(() nil)
 
-   (glof:conj '() '(() ()))
+   (glof:conj () '(() ()))
    '(() ())
    ))
 
@@ -115,8 +115,8 @@
      (glof:get p nil) '(:h 5)
      (glof:get p :b 0) 2
      (glof:get p :f 0) nil
-     (glof:get '() :a) nil
-     (glof:get '() nil) nil)))
+     (glof:get () :a) nil
+     (glof:get () nil) nil)))
 
 (ert-deftest glof-tests-assoc ()
   (cl-letf ((m '(:a 1 :b 2)))
@@ -127,7 +127,7 @@
      '(:a 1 :b 2 :c 3)))
 
   (glof-test-helper-are
-   (glof:assoc '() :a 1)
+   (glof:assoc () :a 1)
    '(:a 1)
 
    (glof:assoc '(:a 1) :a 3)
@@ -135,14 +135,14 @@
    (glof:assoc '(:a 1 :b 2) :b 3)
    '(:a 1 :b 3)
 
-   (glof:assoc '() nil 1)
+   (glof:assoc () nil 1)
    '(nil 1)
 
-   (glof:sort-by (glof:assoc '() :b -2 :a 2))
+   (glof:sort-by (glof:assoc () :b -2 :a 2))
    '(:a 2 :b -2)
 
    (glof:sort-by
-    (glof:assoc '() :b -2 :a 2 :c 3))
+    (glof:assoc () :b -2 :a 2 :c 3))
    '(:a 2 :b -2 :c 3)))
 
 (ert-deftest glof-tests-dissoc ()
@@ -155,13 +155,13 @@
    '( :a 1 :b 2 :c 3)
    (glof:dissoc '( :a 1 :b 2 :c 3) :c :b) ; several keys at once
    '( :a 1)
-   (glof:dissoc '( :a 1 :b 2 :c 3) '() :c :b) ; several keys at once
+   (glof:dissoc '( :a 1 :b 2 :c 3) () :c :b) ; several keys at once
    '( :a 1)))
 
 (ert-deftest glof-tests-select-keys ()
   (glof-test-helper-are
-   (glof:select-keys '(:a 1 :b 2) '())
-   '()
+   (glof:select-keys '(:a 1 :b 2) ())
+   ()
    (glof:select-keys '(:a 1 :b 2) '(:a))
    '(:a 1)
    (glof:select-keys '( :a 1 :b 2 :c 3) '( :a :c))
@@ -177,7 +177,7 @@
    (glof:last (glof:plist :a 1 :b 2 :c 3))
    '(:c 3)
    (glof:last (glof:plist))
-   '()))
+   ()))
 
 (ert-deftest glof-tests-reduce ()
   (glof-test-helper-are
@@ -193,8 +193,8 @@
   ;;; [[http://github.com/clojure/clojure/test/clojure/test_clojure/data_structures.clj]]
   ;; without vector and set support
   (glof-test-helper-are
-   (glof:contains-p '() :a) nil
-   (glof:contains-p '() nil) nil
+   (glof:contains-p () :a) nil
+   (glof:contains-p () nil) nil
 
    (glof:contains-p '(:a 1) :a) t
    (glof:contains-p '(:a 1) :b) nil
@@ -216,7 +216,7 @@
      (glof:get-in p '(:f)) nil
      (glof:get-in p '(:g)) 'falsey
      (glof:get-in p '(:h)) nil
-     (glof:get-in p '()) p
+     (glof:get-in p ()) p
      (glof:get-in p nil) p
 
      ;; with optional default
@@ -227,7 +227,7 @@
      (glof:get-in p '(:g) 0) 'falsey
      (glof:get-in p '(:h) 0) 0
      (glof:get-in p '(:x :y) '( :y 1)) '( :y 1)
-     (glof:get-in p '() 0) p
+     (glof:get-in p () 0) p
      )))
 
 (ert-deftest glof-tests-zipmap ()
@@ -237,11 +237,11 @@
    (glof:zipmap '(:a :b :c :d) '(1)) (glof:plist :a 1)
    (glof:zipmap '(:a) '(1 2 3 4)) (glof:plist :a 1)
    (glof:zipmap '(:a :b) '((1) (2))) (glof:plist :a '(1) :b '(2))
-   (glof:zipmap '() '()) nil
-   (glof:zipmap '(:a) '()) nil
-   (glof:zipmap '(:a :b) '()) nil
-   (glof:zipmap '() '(:a)) nil
-   (glof:zipmap '() '(:a :b)) nil))
+   (glof:zipmap () ()) nil
+   (glof:zipmap '(:a) ()) nil
+   (glof:zipmap '(:a :b) ()) nil
+   (glof:zipmap () '(:a)) nil
+   (glof:zipmap () '(:a :b)) nil))
 
 (ert-deftest glof-tests-keyify ()
   (cl-letf ((expected :test))
