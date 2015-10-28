@@ -285,6 +285,16 @@
 (cl-defun glof:empty (&optional x)
   ())
 
+(cl-defun glof:eieio-to-plist (object)
+  (cl-letf* ((class (eieio-object-class object))
+             (slots (eieio-class-slots class)))
+    (seq-mapcat
+     (lambda (slot)
+       (list 
+        (glof:keyify slot)
+        (eieio-oref  object slot)))
+     (seq-map #'eieio-slot-descriptor-name slots))))
+
 (provide 'glof)
 
 ;;; glof.el ends here
