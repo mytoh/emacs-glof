@@ -249,9 +249,10 @@
               (glof:zipmap
                kr vr)))
     (`(,k ,v)
-      (glof:assoc '() k v))))
+      (glof:assoc () k v))))
 
 (cl-defun glof:keyify (&rest names)
+  (declare (pure t))
   (pcase names
     (`(,ns ,thing)
       (intern (seq-concatenate 'string
