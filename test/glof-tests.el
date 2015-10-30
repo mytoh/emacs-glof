@@ -228,6 +228,28 @@
      (glof:get-in p '(:h) 0) 0
      (glof:get-in p '(:x :y) '( :y 1)) '( :y 1)
      (glof:get-in p () 0) p
+
+     )))
+
+(ert-deftest glof-tests-get-in ()
+  (cl-letf ((p '(:a 1 :b 2 :c ( :d 3 :e 4) :f nil :g falsey nil ( :h 5))))
+    (glof-test-helper-are
+     (glof:get-in p [:c :e]) 4
+     (glof:get-in p [:c :x]) nil
+     (glof:get-in p [:f]) nil
+     (glof:get-in p [:g]) 'falsey
+     (glof:get-in p [:h]) nil
+     (glof:get-in p []) p
+
+     ;; with optional default
+     (glof:get-in p [:c :e] 0) 4
+     (glof:get-in p [:c :x] 0) 0
+     (glof:get-in p [:b] 0) 2
+     (glof:get-in p [:f] 0) nil
+     (glof:get-in p [:g] 0) 'falsey
+     (glof:get-in p [:h] 0) 0
+     (glof:get-in p [:x :y] '( :y 1)) '( :y 1)
+     (glof:get-in p [] 0) p
      )))
 
 (ert-deftest glof-tests-zipmap ()

@@ -239,22 +239,23 @@
 (cl-defun glof:get-in (p ks &optional (default nil))
   (declare (pure t))
   (pcase ks
-    (`() p)
-    (`(,(and k
-             (pred (glof:contains-p p))))
-      (glof:get p k))
-    (`(,(and k
-             (guard (not (glof:contains-p p k)))))
-      default)
-    (`(,(and k
-             (pred (glof:contains-p p)))
-        . ,kr)
-      (glof:get-in (glof:get p k)
-                kr default))
-    (`(,(and k
-             (guard (not (glof:contains-p p k))))
-        . ,_)
-      default)))
+    ((pred seq-empty-p)
+     p)
+    ((seq (and k
+               (pred (glof:contains-p p))) `nil)
+     (glof:get p k))
+    ((seq (and k
+               (guard (not (glof:contains-p p k)))))
+     default)
+    ((seq (and k
+               (pred (glof:contains-p p)))
+          &rest kr)
+     (glof:get-in (glof:get p k)
+               kr default))
+    ((seq (and k
+               (guard (not (glof:contains-p p k))))
+          &rest _kr)
+     default)))
 
 (cl-defun glof:update (p k f)
   (declare (pure t))
