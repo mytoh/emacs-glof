@@ -6,9 +6,11 @@
 (require 'subr-x)
 
 (cl-defun glof:plist (&rest kvs)
+  (declare (pure t))
   (apply #'list kvs))
 
 (cl-defun glof:conj (&rest plists)
+  (declare (pure t))
   (pcase plists
     (`(nil nil) (glof:empty))
     (`(nil ,x) x)
@@ -30,16 +32,19 @@
 
 
 (cl-defun glof:key (p)
+  (declare (pure t))
   (pcase p
     (`(,k ,v)
       k)))
 
 (cl-defun glof:val (p)
+  (declare (pure t))
   (pcase p
     (`(,k ,v)
       v)))
 
 (cl-defun glof:get (p key &optional (default nil))
+  (declare (pure t))
   (pcase p
     (`() (glof:empty))
     (`(,(pred (cl-equalp key))
@@ -56,17 +61,21 @@
       (glof:get (glof:rest p) key default))))
 
 (cl-defun glof:first (p)
+  (declare (pure t))
   (pcase-let ((`(,key ,value . ,_)
                 p))
     `(,key ,value)))
 
 (cl-defun glof:second (p)
+  (declare (pure t))
   (glof:first (glof:rest p)))
 
 (cl-defun glof:rest (p)
+  (declare (pure t))
   (cddr p))
 
 (cl-defun glof:keys (p)
+  (declare (pure t))
   (pcase p
     (`() (glof:empty))
     (`(,x . ,_)
@@ -76,6 +85,7 @@
         (cons x)))))
 
 (cl-defun glof:vals (p)
+  (declare (pure t))
   (pcase p
     (`() (glof:empty))
     (`(,_ ,x . ,_)
@@ -85,6 +95,7 @@
         (cons x)))))
 
 (cl-defun glof:assoc (plist key value &rest kvs)
+  (declare (pure t))
   (pcase kvs
     (`()
       (cl-labels ((rec (p flag)
@@ -108,12 +119,14 @@
              k v rkv))))
 
 (cl-defun glof:assoc-in (p ks v)
+  (declare (pure t))
   (pcase ks
     (`(,k) (glof:assoc p k v))
     (`(,k . ,kr)
       (glof:assoc p k (glof:assoc-in (glof:get p k) kr v)))))
 
 (cl-defun glof:dissoc (p &rest keys)
+  (declare (pure t))
   (pcase keys
     (`()
       p)
@@ -137,11 +150,13 @@
                 k2 ks))))
 
 (cl-defun glof:alistify (p)
+  (declare (pure t))
   (glof:map
    (pcase-lambda (`(,k ,v)) (cons k v))
    p))
 
 (cl-defun glof:sort-by (p)
+  (declare (pure t))
   (cl-letf* ((alist (glof:alistify p))
              (sorted
               (sort alist
@@ -173,6 +188,7 @@
 ;;     (glof:sort p)))
 
 (cl-defun glof:map (f p)
+  (declare (pure t))
   (pcase p
     (`() (glof:empty))
     (_
@@ -180,18 +196,21 @@
            (glof:map f (glof:rest p))))))
 
 (cl-defun glof:select-keys (p keys)
+  (declare (pure t))
   (seq-mapcat
    (pcase-lambda ((and k (pred (glof:contains-p p))))
        (list k (glof:get p k)))
    keys))
 
 (cl-defun glof:last (p)
+  (declare (pure t))
   (pcase p
     (`() (glof:empty))
     (`(,k ,v) (glof:plist k v))
     (_ (glof:last (glof:rest p)))))
 
 (cl-defun glof:reduce (f p)
+  (declare (pure t))
   (pcase p
     (`() (glof:empty))
     (`(,_ ,_) p)
@@ -202,9 +221,11 @@
                 (glof:rest (glof:rest p)))))))
 
 (cl-defun glof:entry-p (p)
+  (declare (pure t))
   (= 2 (seq-length p)))
 
 (cl-defun glof:contains-p (p k)
+  (declare (pure t))
   (pcase p
     (`() (glof:empty))
     (`(,(pred (cl-equalp k))
@@ -216,6 +237,7 @@
       (glof:contains-p kvr k))))
 
 (cl-defun glof:get-in (p ks &optional (default nil))
+  (declare (pure t))
   (pcase ks
     (`() p)
     (`(,(and k
@@ -235,11 +257,13 @@
       default)))
 
 (cl-defun glof:update (p k f)
+  (declare (pure t))
   (glof:assoc p k
            (funcall f (glof:get p k))))
 
 (cl-defun glof:zipmap (keys vals)
   ;; [[https://www.youtube.com/watch?v=n7aE6k8o_BU]]
+  (declare (pure t))
   (pcase `(,keys,vals)
     (`(nil nil) nil)
     (`(nil (,_ . ,_)) nil)
@@ -274,6 +298,7 @@
                                 ":" thing)))))
 
 (cl-defun glof:stringify (thing)
+  (declare (pure t))
   (pcase (type-of thing)
     (`string thing)
     ((and `symbol
@@ -284,9 +309,11 @@
      (symbol-name thing))))
 
 (cl-defun glof:empty (&optional x)
+  (declare (pure t))
   ())
 
 (cl-defun glof:eieio-to-plist (object)
+  (declare (pure t))
   (cl-letf* ((class (eieio-object-class object))
              (slots (eieio-class-slots class)))
     (seq-mapcat
