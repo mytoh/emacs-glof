@@ -294,4 +294,11 @@
                   '(:a :b :c) 99)
    '(:a (:b (:c 99) :d 4))))
 
+
+(ert-deftest glof-tests-assoc-in-vector ()
+  (glof-test-helper-are
+   (glof:assoc-in '(:a (:b (:c 3) :d 4))
+                  [:a :b :c] 99)
+   '(:a (:b (:c 99) :d 4))))
+
 ;;; glof-tests.el ends here
