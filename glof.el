@@ -242,7 +242,9 @@
     ((pred seq-empty-p)
      p)
     ((seq (and k
-               (pred (glof:contains-p p))) `nil)
+               (pred (glof:contains-p p)))
+          (and (pred seq-p)
+               (pred seq-empty-p)))
      (glof:get p k))
     ((seq (and k
                (guard (not (glof:contains-p p k)))))
