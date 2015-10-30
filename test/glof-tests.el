@@ -231,7 +231,7 @@
 
      )))
 
-(ert-deftest glof-tests-get-in ()
+(ert-deftest glof-tests-get-in-vector ()
   (cl-letf ((p '(:a 1 :b 2 :c ( :d 3 :e 4) :f nil :g falsey nil ( :h 5))))
     (glof-test-helper-are
      (glof:get-in p [:c :e]) 4
