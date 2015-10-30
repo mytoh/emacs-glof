@@ -121,9 +121,16 @@
 (cl-defun glof:assoc-in (p ks v)
   (declare (pure t))
   (pcase ks
-    (`(,k) (glof:assoc p k v))
-    (`(,k . ,kr)
-      (glof:assoc p k (glof:assoc-in (glof:get p k) kr v)))))
+    ((and (pred seq-p)
+          (pred seq-empty-p))
+     p)
+    ((seq k
+          (and (pred seq-p)
+               (pred seq-empty-p)))
+     
+     (glof:assoc p k v))
+    ((seq k &rest kr)
+     (glof:assoc p k (glof:assoc-in (glof:get p k) kr v)))))
 
 (cl-defun glof:dissoc (p &rest keys)
   (declare (pure t))
