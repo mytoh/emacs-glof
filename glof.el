@@ -34,13 +34,13 @@
 (cl-defun glof:key (p)
   (declare (pure t))
   (pcase p
-    (`(,k ,v)
+    (`(,k ,_v)
       k)))
 
 (cl-defun glof:val (p)
   (declare (pure t))
   (pcase p
-    (`(,k ,v)
+    (`(,_k ,v)
       v)))
 
 (cl-defun glof:get (p key &optional (default nil))
@@ -121,12 +121,9 @@
 (cl-defun glof:assoc-in (p ks v)
   (declare (pure t))
   (pcase ks
-    ((and (pred seq-p)
-          (pred seq-empty-p))
-     p)
+    ((pred glof::seq-empty-p) p)
     ((seq k
-          (and (pred seq-p)
-               (pred seq-empty-p)))
+          (pred  glof::seq-empty-p))
      
      (glof:assoc p k v))
     ((seq k &rest kr)
@@ -139,11 +136,9 @@
       p)
     (`(nil . ,ks)
       (apply #'glof:dissoc p ks))
-    (`(,(and k
-             (guard (seq-empty-p p))))
+    (`(,(guard (seq-empty-p p)))
       (glof:empty))
-    (`(,(and k
-             (pred (cl-equalp (glof:key (glof:first p))))))
+    (`(,(pred (cl-equalp (glof:key (glof:first p)))))
       (glof:rest p))
     (`(,(and k
              (guard (not (cl-equalp k (glof:key (glof:first p)))))))
@@ -246,12 +241,11 @@
 (cl-defun glof:get-in (p ks &optional (default nil))
   (declare (pure t))
   (pcase ks
-    ((pred seq-empty-p)
+    ((pred glof::seq-empty-p)
      p)
     ((seq (and k
                (pred (glof:contains-p p)))
-          (and (pred seq-p)
-               (pred seq-empty-p)))
+          (pred glof::seq-empty-p))
      (glof:get p k))
     ((seq (and k
                (guard (not (glof:contains-p p k)))))
@@ -318,7 +312,7 @@
     (`symbol
      (symbol-name thing))))
 
-(cl-defun glof:empty (&optional x)
+(cl-defun glof:empty (&optional _x)
   (declare (pure t))
   ())
 
@@ -328,17 +322,21 @@
              (slots (eieio-class-slots class)))
     (seq-mapcat
      (lambda (slot)
-       (list 
+       (list
         (glof:keyify slot)
         (eieio-oref  object slot)))
      (seq-map #'eieio-slot-descriptor-name slots))))
+
+(cl-defun glof::seq-empty-p (sequence)
+  (and (seq-p sequence)
+       (seq-empty-p sequence)))
 
 (provide 'glof)
 
 ;;; glof.el ends here
 
 ;; Local Variables:
-;; nameless-separator: ":" 
+;; nameless-separator: ":"
 ;; nameless-current-name: "glof"
 ;; eval: (nameless-mode)
 ;; End:
