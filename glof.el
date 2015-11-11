@@ -328,7 +328,7 @@
      (seq-map #'eieio-slot-descriptor-name slots))))
 
 (cl-defun glof::seq-empty-p (sequence)
-  (and (seq-p sequence)
+  (and (seqp sequence)
        (seq-empty-p sequence)))
 
 (provide 'glof)
