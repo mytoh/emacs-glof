@@ -186,14 +186,6 @@
    (glof:last (glof:plist))
    ()))
 
-(ert-deftest glof-tests-reduce ()
-  (glof-test-helper-are
-   (glof:reduce
-    (lambda (a b)
-      (glof:plist :result (+ (glof:val a) (glof:val b))))
-    '(:a 1 :b 2 :c 3))
-   '(:result 6)
-   ))
 
 (ert-deftest glof-tests-contains-p ()
 
