@@ -211,16 +211,23 @@
     (`(,k ,v) (glof:plist k v))
     (_ (glof:last (glof:rest p)))))
 
-(cl-defun glof:reduce (f p)
+(cl-defun glof:foldr (f z p)
   (declare (pure t))
   (pcase p
-    (`() (glof:empty))
-    (`(,_ ,_) p)
+    (`() z)
     (_
-     (glof:reduce f
-               (glof:conj
-                (funcall f (glof:first p) (glof:second p))
-                (glof:rest (glof:rest p)))))))
+     (funcall f (glof:first p)
+              (glof:foldr f z
+                       (glof:rest p))))))
+
+(cl-defun glof:foldl (f z p)
+  (declare (pure t))
+  (pcase p
+    (`() z)
+    (_
+     (glof:foldl f
+              (funcall f z (glof:first p))
+              (glof:rest p)))))
 
 (cl-defun glof:entry-p (p)
   (declare (pure t))
@@ -330,6 +337,24 @@
 (cl-defun glof::seq-empty-p (sequence)
   (and (seqp sequence)
        (seq-empty-p sequence)))
+
+(cl-defmacro glof:let (bindings &body body)
+  ())
+
+
+
+;; (cl-letf ((plist '(:a 1 :b 2 :c 3)))
+;;   (glof:let (((a b c) plist))
+;;             `(,a ,b ,c)))
+
+;; ((lambda (binds body)
+;;    (if binds
+;;        (cl-letf ((bind (car binds)))
+;;          `(cl-letf ((,(car (car bind))
+;;                       (glof:get ,(cadr bind) ,(glof:keyify (car (car bind))))))
+;;             (recur ,(cdr binds))))
+;;      ()))
+;;  '(((a b c) (:a 1 :b 2 :c 3))))
 
 (provide 'glof)
 
