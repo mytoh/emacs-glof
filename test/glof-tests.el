@@ -186,6 +186,23 @@
    (glof:last (glof:plist))
    ()))
 
+(ert-deftest glof-tests-foldl ()
+  (glof-test-helper-are
+   (glof:foldl
+    (pcase-lambda (`(_ ,a) `(_ ,b))
+        (glof:plist :result (+ a b)))
+    '(:result 0)
+    '(:a 1 :b 2 :c 3))
+   '(:result 6)))
+
+(ert-deftest glof-tests-foldr ()
+  (glof-test-helper-are
+   (glof:foldr
+    (pcase-lambda (`(_ ,a) `(_ ,b))
+        (glof:plist :result (+ a b)))
+    '(:result 0)
+    '(:a 1 :b 2 :c 3))
+   '(:result 6)))
 
 (ert-deftest glof-tests-contains-p ()
 
