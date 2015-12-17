@@ -190,12 +190,11 @@
 ;;     (glof:sort p)))
 
 (cl-defun glof:map (f p)
-  (declare (pure t))
-  (pcase p
-    (`() (glof:empty))
-    (_
-     (cons (funcall f (glof:first p))
-           (glof:map f (glof:rest p))))))
+  (glof:foldr
+   (lambda (a l)
+     (cons (funcall f a) l))
+   (glof:empty)
+   p))
 
 (cl-defun glof:select-keys (p keys)
   (declare (pure t))
