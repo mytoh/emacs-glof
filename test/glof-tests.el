@@ -208,6 +208,23 @@
     '(:a 1 :b 2 :c 3))
    '(:result 6)))
 
+(ert-deftest glof-tests-unfold ()
+  (cl-letf ((plist (glof:plist :a 1 :b 2 :c 3)))
+    (glof-test-helper-are
+     (glof:unfold
+      #'null
+      (pcase-lambda (`(,k ,v . ,_))
+          (glof:plist
+           k (* v v)))
+      #'glof:rest
+      plist)
+     (seq-mapcat #'identity
+                 (glof:map
+                  (pcase-lambda (`(,k ,v))
+                      (glof:plist
+                       k (* v v)))
+                  plist)))))
+
 (ert-deftest glof-tests-contains-p ()
 
   ;;; [[http://github.com/clojure/clojure/test/clojure/test_clojure/data_structures.clj]]
