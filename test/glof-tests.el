@@ -172,6 +172,10 @@
    '(:a 1 :c 3)
    (glof:select-keys '( :a 1 :b 2 :c 3) '[:a :c])
    '(:a 1 :c 3)
+   (glof:select-keys '( :a 1 :b 2 :c 3) '[:a :z])
+   '(:a 1)
+   (glof:select-keys '( :a 1 :b 2 :c 3) '[:x :y])
+   ()
    ))
 
 (ert-deftest glof-tests-alistify ()
