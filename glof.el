@@ -200,7 +200,9 @@
   (declare (pure t))
   (seq-mapcat
    (pcase-lambda ((and k (pred (glof:contains-p p))))
-       (list k (glof:get p k)))
+       (if-let ((found (glof:get p k)))
+           (list k found)
+         nil))
    keys))
 
 (cl-defun glof:last (p)
