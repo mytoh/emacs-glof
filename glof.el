@@ -230,6 +230,13 @@
               (funcall f z (glof:first p))
               (glof:rest p)))))
 
+(cl-defun glof:unfold (p h ns x)
+  (pcase (funcall p x)
+    (`t ())
+    (_
+     (glof:conj (funcall h x)
+             (glof:unfold p h ns (funcall ns x))))))
+
 (cl-defun glof:entry-p (p)
   (declare (pure t))
   (= 2 (seq-length p)))
