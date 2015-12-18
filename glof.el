@@ -342,7 +342,7 @@
   (declare (pure t))
   ())
 
-(cl-defun glof:eieio-to-plist (object)
+(cl-defun glof:eieio->plist (object)
   (declare (pure t))
   (cl-letf* ((class (eieio-object-class object))
              (slots (eieio-class-slots class)))
