@@ -294,6 +294,17 @@
     (`(,k ,v)
       (glof:assoc () k v))))
 
+(cl-defun glof:merge (&rest plists)
+  (pcase plists
+    (`(,p) p)
+    (`(() ()) ())
+    (`(() ,p) p)
+    (`(,p ()) p)
+    (`(,a ,b)
+      (apply #'glof:assoc a b))
+    (`(,a ,b . ,r)
+      (apply #'glof:merge (glof:merge a b) r))))
+
 (cl-defun glof:keyify (&rest names)
   (declare (pure t))
   (pcase names
