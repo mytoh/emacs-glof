@@ -338,4 +338,22 @@
                   [:a :b :c] 99)
    '(:a (:b (:c 99) :d 4))))
 
+(ert-deftest glof-tests-merge ()
+  (glof-test-helper-are
+   (glof:merge ())
+   ()
+   (glof:merge () ())
+   ()
+   (glof:merge (glof:plist :a 1 :b 2)
+               ())
+   (glof:plist :a 1 :b 2)
+   (glof:merge (glof:plist :a 1 :b 2)
+               (glof:plist :c 3))
+   (glof:plist :a 1 :b 2 :c 3)
+   (glof:merge (glof:plist :a 1 :b 2)
+               (glof:plist :c 3)
+               (glof:plist :d 4))
+   (glof:plist :a 1 :b 2 :c 3 :d 4)
+   ))
+
 ;;; glof-tests.el ends here
