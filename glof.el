@@ -153,9 +153,12 @@
 
 (cl-defun glof:alistify (p)
   (declare (pure t))
-  (glof:map
-   (pcase-lambda (`(,k ,v)) (cons k v))
-   p))
+  (seq-reverse
+   (glof:foldl
+    (pcase-lambda (r `(,k ,v))
+        (cons (cons k v) r))
+    (glof:empty)
+    p)))
 
 (cl-defun glof:sort-by (p)
   (declare (pure t))
