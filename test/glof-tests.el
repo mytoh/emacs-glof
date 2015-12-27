@@ -104,7 +104,7 @@
       (pcase-lambda (`(,k ,v))
           (list k (1+ v)))
       m)
-     '((:a 2) (:b 3)))))
+     '(:a 2 :b 3))))
 
 (ert-deftest glof-tests-get ()
   (cl-letf ((p '(:a 1 :b 2 :c ( :d 3 :e 4) :f nil :g false nil ( :h 5))))
@@ -218,12 +218,11 @@
            k (* v v)))
       #'glof:rest
       plist)
-     (seq-mapcat #'identity
-                 (glof:map
-                  (pcase-lambda (`(,k ,v))
-                      (glof:plist
-                       k (* v v)))
-                  plist)))))
+     (glof:map
+      (pcase-lambda (`(,k ,v))
+          (glof:plist
+           k (* v v)))
+      plist))))
 
 (ert-deftest glof-tests-contains-p ()
 
