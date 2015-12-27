@@ -192,7 +192,7 @@
 (cl-defun glof:map (f p)
   (glof:foldr
    (lambda (a l)
-     (cons (funcall f a) l))
+     (glof:conj (funcall f a) l))
    (glof:empty)
    p))
 
