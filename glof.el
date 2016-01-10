@@ -373,6 +373,17 @@
 (cl-defmacro glof:let (bindings &body body)
   ())
 
+;; TODO
+(cl-defun glof:dissoc-in ())
+
+;; TODO
+;; clojure/algo.generic
+(cl-defun glof:map-keys (f p)
+  (glof:foldr
+   (pcase-lambda (`(,k ,v) a)
+       (glof:conj (glof:plist k (funcall f v)) a))
+   (glof:empty)
+   p))
 
 
 ;; (cl-letf ((plist '(:a 1 :b 2 :c 3)))
