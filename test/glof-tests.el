@@ -355,4 +355,10 @@
    (glof:plist :a 1 :b 2 :c 3 :d 4)
    ))
 
+(ert-deftest glof-tests-find ()
+  (glof-test-helper-are
+   (glof:find '(:a 1 :b 2 :c 3) :a) '(:a 1)
+   (glof:find '(:a 1 :b 2 :c 3) :d) ()
+   (glof:find () :d)))
+
 ;;; glof-tests.el ends here
