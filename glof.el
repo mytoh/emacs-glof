@@ -360,8 +360,14 @@
   (and (seqp sequence)
        (seq-empty-p sequence)))
 
-;; TODO
-(cl-defun glof:find (p k))
+(cl-defun glof:find (p k)
+  (declare (pure t))
+  (pcase p
+    (`() ())
+    (`(,(pred (cl-equalp k)) . ,_)
+      (glof:first p))
+    (_
+     (glof:find (glof:rest p) k))))
 
 ;; TODO
 (cl-defmacro glof:let (bindings &body body)
