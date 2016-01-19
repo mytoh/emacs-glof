@@ -92,14 +92,14 @@
 
 (ert-deftest glof-tests-keys ()
   (glof-test-helper-are
-   (glof:keys '(:a 1 :b 2)) '(:a :b)))
+   (glof:names '(:a 1 :b 2)) '(:a :b)))
 
 (ert-deftest glof-tests ()
   (cl-letf ((m '(:a 1 :b 2)))
     (glof-test-helper-are
      (glof:first m) '(:a 1)
      (glof:second m) '(:b 2)
-     (glof:vals m) '(1 2)
+     (glof:values m) '(1 2)
      (glof:map
       (pcase-lambda (`(,k ,v))
           (list k (1+ v)))

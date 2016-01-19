@@ -74,24 +74,24 @@
   (declare (pure t))
   (cddr p))
 
-(cl-defun glof:keys (p)
+(cl-defun glof:names (p)
   (declare (pure t))
   (pcase p
     (`() (glof:empty))
     (`(,x . ,_)
       (thread-last p
         glof:rest
-        glof:keys
+        glof:names
         (cons x)))))
 
-(cl-defun glof:vals (p)
+(cl-defun glof:values (p)
   (declare (pure t))
   (pcase p
     (`() (glof:empty))
     (`(,_ ,x . ,_)
       (thread-last p
         glof:rest
-        glof:vals
+        glof:values
         (cons x)))))
 
 (cl-defun glof:assoc (plist key value &rest kvs)
@@ -286,7 +286,7 @@
 (cl-defun glof:zipmap (keys vals)
   ;; [[https://www.youtube.com/watch?v=n7aE6k8o_BU]]
   (declare (pure t))
-  (pcase `(,keys,vals)
+  (pcase `(,keys ,vals)
     (`(nil nil) nil)
     (`(nil (,_ . ,_)) nil)
     (`((,_ . ,_) nil) nil)
