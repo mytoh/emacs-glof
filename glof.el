@@ -102,7 +102,7 @@
                     (pcase p
                       (`()
                         (if (null flag)
-                            (list key value)
+                            (glof:prop key value)
                           (glof:empty)))
                       (`(,(pred (cl-equalp key)) . ,_)
                         (cl-list* key value (rec (glof:rest p) t)))
@@ -168,7 +168,7 @@
                     (pcase-lambda (`(,a . ,_) `(,b . ,_))
                         (string< a b)))))
     (seq-mapcat
-     (pcase-lambda (`(,k . ,v)) (list k v))
+     (pcase-lambda (`(,k . ,v)) (glof:prop k v))
      sorted)))
 
 ;; [[http://www.cs.toronto.edu/~dianaz/Example_LispPart1.html]]
@@ -204,7 +204,7 @@
   (seq-mapcat
    (pcase-lambda ((and k (pred (glof:contains-p p))))
        (if-let ((found (glof:get p k)))
-           (list k found)
+           (glof:prop k found)
          nil))
    keys))
 
@@ -351,9 +351,9 @@
              (slots (eieio-class-slots class)))
     (seq-mapcat
      (lambda (slot)
-       (list
+       (glof:prop
         (glof:keyword slot)
-        (eieio-oref  object slot)))
+        (eieio-oref object slot)))
      (seq-map #'eieio-slot-descriptor-name slots))))
 
 (cl-defun glof::seq-empty-p (sequence)
@@ -368,6 +368,9 @@
       (glof:first p))
     (_
      (glof:find (glof:rest p) k))))
+
+(cl-defun glof:prop (n v)
+  (list n v))
 
 ;; TODO
 (cl-defmacro glof:let (bindings &body body)
