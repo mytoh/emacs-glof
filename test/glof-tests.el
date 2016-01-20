@@ -301,24 +301,24 @@
    (glof:zipmap () '(:a)) nil
    (glof:zipmap () '(:a :b)) nil))
 
-(ert-deftest glof-tests-keyify ()
+(ert-deftest glof-tests-keyword ()
   (cl-letf ((expected :test))
     (glof-test-helper-are
-     (glof:keyify :test) expected
-     (glof:keyify 'test) expected
-     (glof:keyify "test") expected))
+     (glof:keyword :test) expected
+     (glof:keyword 'test) expected
+     (glof:keyword "test") expected))
   ;; namespace
   (cl-letf ((expected :user/test))
     (glof-test-helper-are
-     (glof:keyify "user" "test") expected
-     (glof:keyify "user" 'test) expected)))
+     (glof:keyword "user" "test") expected
+     (glof:keyword "user" 'test) expected)))
 
-(ert-deftest glof-tests-stringify()
+(ert-deftest glof-tests-string ()
   (cl-letf ((expected "test"))
     (glof-test-helper-are
-     (glof:stringify :test) expected
-     (glof:stringify 'test) expected
-     (glof:stringify "test") expected)))
+     (glof:string :test) expected
+     (glof:string 'test) expected
+     (glof:string "test") expected)))
 
 (ert-deftest glof-tests-update ()
   (glof-test-helper-are

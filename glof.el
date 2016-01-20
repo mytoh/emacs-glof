@@ -308,15 +308,15 @@
     (`(,a ,b . ,r)
       (apply #'glof:merge (glof:merge a b) r))))
 
-(cl-defun glof:keyify (&rest names)
+(cl-defun glof:keyword (&rest names)
   (declare (pure t))
   (pcase names
     (`(,ns ,thing)
       (intern (seq-concatenate 'string
                                ":"
-                               (glof:stringify ns)
+                               (glof:string ns)
                                "/"
-                               (glof:stringify thing))))
+                               (glof:string thing))))
     
     (`(,(and (app type-of `symbol)
              (pred keywordp)
@@ -324,13 +324,13 @@
       thing)
     (`(,(and (app type-of `symbol)
              thing))
-      (glof:keyify (symbol-name thing)))
+      (glof:keyword (symbol-name thing)))
     ( `(,(and (app type-of `string)
               thing))
        (intern (seq-concatenate 'string
                                 ":" thing)))))
 
-(cl-defun glof:stringify (thing)
+(cl-defun glof:string (thing)
   (declare (pure t))
   (pcase (type-of thing)
     (`string thing)
@@ -352,7 +352,7 @@
     (seq-mapcat
      (lambda (slot)
        (list
-        (glof:keyify slot)
+        (glof:keyword slot)
         (eieio-oref  object slot)))
      (seq-map #'eieio-slot-descriptor-name slots))))
 
@@ -394,7 +394,7 @@
 ;;    (if binds
 ;;        (cl-letf ((bind (car binds)))
 ;;          `(cl-letf ((,(car (car bind))
-;;                       (glof:get ,(cadr bind) ,(glof:keyify (car (car bind))))))
+;;                       (glof:get ,(cadr bind) ,(glof:keyword (car (car bind))))))
 ;;             (recur ,(cdr binds))))
 ;;      ()))
 ;;  '(((a b c) (:a 1 :b 2 :c 3))))
