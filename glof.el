@@ -18,7 +18,7 @@
     (`(,p ,x)
       (glof:conj (glof:rest p)
               (cl-letf ((found (glof:contains-p
-                                x (glof:key (glof:first p)))))
+                                x (glof:name (glof:first p)))))
                 (if found
                     x
                   (seq-concatenate 'list
@@ -31,16 +31,16 @@
               x2 xs))))
 
 
-(cl-defun glof:key (p)
+(cl-defun glof:name (p)
   (declare (pure t))
   (pcase p
-    (`(,k ,_v)
-      k)))
+    (`(,n ,_)
+      n)))
 
-(cl-defun glof:val (p)
+(cl-defun glof:value (p)
   (declare (pure t))
   (pcase p
-    (`(,_k ,v)
+    (`(,_ ,v)
       v)))
 
 (cl-defun glof:get (p key &optional (default nil))
@@ -138,10 +138,10 @@
       (apply #'glof:dissoc p ks))
     (`(,(guard (seq-empty-p p)))
       (glof:empty))
-    (`(,(pred (cl-equalp (glof:key (glof:first p)))))
+    (`(,(pred (cl-equalp (glof:name (glof:first p)))))
       (glof:rest p))
     (`(,(and k
-             (guard (not (cl-equalp k (glof:key (glof:first p)))))))
+             (guard (not (cl-equalp k (glof:name (glof:first p)))))))
       (append
        (glof:first p)
        (glof:dissoc (glof:rest p) k)))
@@ -176,8 +176,8 @@
 ;;   (pcase p
 ;;     (`() '())
 ;;     (`(,_ ,_) p)
-;;     ((guard (string< (glof:key (glof:first p))
-;;                      (glof:key (glof:second p))))
+;;     ((guard (string< (glof:name (glof:first p))
+;;                      (glof:name (glof:second p))))
 ;;      (glof::check-again (glof:conj (glof:first p)
 ;;                                      (glof:sort (glof:rest p)))))
 ;;     (_
@@ -187,8 +187,8 @@
 ;;                                           (glof:rest (glof:rest p)))))))))
 
 ;; (defun glof::check-again (p)
-;;   (if (string< (glof:key (glof:first p))
-;;                (glof:key (glof:second p)))
+;;   (if (string< (glof:name (glof:first p))
+;;                (glof:name (glof:second p)))
 ;;       p
 ;;     (glof:sort p)))
 
