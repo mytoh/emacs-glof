@@ -7,6 +7,8 @@
 (require 'ert)
 (require 'glof)
 
+(ert-delete-all-tests)
+
 (cl-defmacro glof-test-helper-is (expected actual &optional (tester 'cl-equalp))
   `(should (funcall #',tester ,expected ,actual)))
 
