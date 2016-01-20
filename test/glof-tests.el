@@ -363,9 +363,9 @@
    (glof:find '(:a 1 :b 2 :c 3) :d) ()
    (glof:find () :d)))
 
-(ert-deftest glof-tests-map-keys ()
+(ert-deftest glof-tests-map-names ()
   (glof-test-helper-are
-   (glof:map-keys (lambda (x) (* x 2)) '(:a 1 :b 2 :c 3))
+   (glof:map-names (lambda (x) (* x 2)) '(:a 1 :b 2 :c 3))
    '(:a 2 :b 4 :c 6)))
 
 ;;; glof-tests.el ends here

@@ -377,8 +377,8 @@
 (cl-defun glof:dissoc-in ())
 
 ;; TODO
-;; clojure/algo.generic
-(cl-defun glof:map-keys (f p)
+;; clojure/algo.generic 
+(cl-defun glof:map-names (f p)
   (glof:foldr
    (pcase-lambda (`(,k ,v) a)
        (glof:conj (glof:plist k (funcall f v)) a))
