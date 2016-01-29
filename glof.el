@@ -76,23 +76,19 @@
 
 (cl-defun glof:names (p)
   (declare (pure t))
-  (pcase p
-    (`() (glof:empty))
-    (`(,x . ,_)
-      (thread-last p
-        glof:rest
-        glof:names
-        (cons x)))))
+  (glof:foldr
+   (pcase-lambda (`(,n ,v) a)
+       (cons n a))
+   ()
+   p))
 
 (cl-defun glof:values (p)
   (declare (pure t))
-  (pcase p
-    (`() (glof:empty))
-    (`(,_ ,x . ,_)
-      (thread-last p
-        glof:rest
-        glof:values
-        (cons x)))))
+  (glof:foldr
+   (pcase-lambda (`(,n ,v) a)
+       (cons v a))
+   ()
+   p))
 
 (cl-defun glof:assoc (plist key value &rest kvs)
   (declare (pure t))
@@ -203,9 +199,10 @@
   (declare (pure t))
   (seq-mapcat
    (pcase-lambda ((and k (pred (glof:contains-p p))))
-       (if-let ((found (glof:get p k)))
-           (glof:prop k found)
-         nil))
+       (cl-letf ((found (glof:get p k :not-found)))
+         (pcase found
+           (:not-found nil)
+           (_ (glof:prop k found)))))
    keys))
 
 (cl-defun glof:last (p)
@@ -371,6 +368,7 @@
 
 (cl-defun glof:prop (n v)
   (list n v))
+(defalias 'glof:singleton #'glof:prop)
 
 ;; TODO
 (cl-defmacro glof:let (bindings &body body)
