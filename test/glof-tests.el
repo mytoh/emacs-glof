@@ -247,7 +247,8 @@
 
 (ert-deftest glof-tests-get-in ()
 
-  (cl-letf ((p '(:a 1 :b 2 :c ( :d 3 :e 4) :f nil :g falsey nil ( :h 5))))
+  (cl-letf ((p '(:a 1 :b 2 :c ( :d 3 :e 4) :f nil :g falsey nil ( :h 5)))
+            (p2 '(:a 1 :b [(:c 3)] :e [(:f (:g [1 2 3]))])))
     (glof-test-helper-are
   ;;; [[http://github.com/clojure/clojure/test/clojure/test_clojure/data_structures.clj]]
      (glof:get-in p '(:c :e)) 4
@@ -268,6 +269,11 @@
      (glof:get-in p '(:x :y) '( :y 1)) '( :y 1)
      (glof:get-in p () 0) p
 
+     ;; nested vector
+     (glof:get-in p2 '(:b 0 :c)) 3
+     (glof:get-in p2 '(:d)) nil
+     (glof:get-in p2 '(:d) :not-found) :not-found
+     (glof:get-in p2 '(:e 0 :f :g 2)) 3
      )))
 
 (ert-deftest glof-tests-get-in-vector ()

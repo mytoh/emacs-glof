@@ -261,22 +261,31 @@
   (pcase ks
     ((pred glof::seq-empty-p)
      p)
-    ((seq (and k
-               (pred (glof:contains-p p)))
-          (pred glof::seq-empty-p))
-     (glof:get p k))
-    ((seq (and k
-               (guard (not (glof:contains-p p k)))))
+    ((and (guard (vectorp p))
+          (seq (and k
+                    (pred numberp))
+               (pred glof::seq-empty-p)))
+     (glof:get p k default))
+    ((seq k (pred glof::seq-empty-p))
+     (glof:get p k default))
+    ((and (guard (consp p))
+          (seq (and k
+                    (guard (not (glof:contains-p p k))))))
      default)
-    ((seq (and k
-               (pred (glof:contains-p p)))
-          &rest kr)
+    ((and (guard (vectorp p))
+          (seq (and k
+                    (pred numberp))
+               &rest kr))
+     (glof:get-in (glof:get p k) kr default))
+    ((seq k &rest kr)
      (glof:get-in (glof:get p k)
                kr default))
-    ((seq (and k
-               (guard (not (glof:contains-p p k))))
-          &rest _kr)
-     default)))
+    ((and (guard (consp p))
+          (seq (and k
+                    (guard (not (glof:contains-p p k))))
+               &rest _kr))
+     default)
+    ))
 
 (cl-defun glof:update (p k f)
   (declare (pure t))
