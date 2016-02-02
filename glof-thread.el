@@ -7,7 +7,10 @@
 (require 'glof)
 (require 'colle)
 
-(cl-defun glof::thread-transform (forms)
+(cl-defun glof::thread-flipped-get (k p)
+  (glof:get p k))
+
+(cl-defun glof::thread-transform (first? forms)
   (colle:map
    (lambda (form)
      (pcase form
@@ -16,7 +19,9 @@
        ((or (pred keywordp)
             (pred stringp)
             (pred numberp))
-        `(glof:get ,form))
+        (if first?
+            `(glof:get ,form)
+          `(glof::thread-flipped-get ,form)))
        ((pred vectorp)
         `(glof:get-in ,form))
        (_ form)))
@@ -24,11 +29,11 @@
 
 (cl-defmacro glof:-> (expr &rest forms)
   `(thread-first ,expr
-     ,@(glof::thread-transform forms)))
+     ,@(glof::thread-transform t forms)))
 
-(cl-defmacro glof:->> (expr &rets forms)
+(cl-defmacro glof:->> (expr &rest forms)
   `(thread-last ,expr
-     ,@(glof::thread-transform forms)))
+     ,@(glof::thread-transform nil forms)))
 
 (provide 'glof-thread)
 
