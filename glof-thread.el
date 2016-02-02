@@ -5,7 +5,7 @@
 ;;; Code:
 
 (require 'glof)
-
+(require 'colle)
 
 (cl-defun glof::thread-transform (forms)
   (colle:map
@@ -14,7 +14,8 @@
        (`(,f . ,args)
          form)
        ((or (pred keywordp)
-            (pred stringp))
+            (pred stringp)
+            (pred numberp))
         `(glof:get ,form))
        ((pred vectorp)
         `(glof:get-in ,form))
@@ -28,5 +29,7 @@
 (cl-defmacro glof:->> (expr &rets forms)
   `(thread-last ,expr
      ,@(glof::thread-transform forms)))
+
+(provide 'glof-thread)
 
 ;;; glof-thread.el ends here
