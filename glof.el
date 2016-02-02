@@ -4,6 +4,7 @@
 
 (require 'seq)
 (require 'subr-x)
+(require 'pcase)
 
 (cl-defun glof:plist (&rest kvs)
   (declare (pure t))
