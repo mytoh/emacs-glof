@@ -33,4 +33,10 @@
             :b 1 :c 1+)
    4))
 
+(ert-deftest glof-test-thread-last ()
+  (glof-test-helper-are
+   (glof:->> '(:a 1 :b [2 (:c 3)])
+             :b 1 :c 1+)
+   4))
+
 ;;; glof-thread-tests.el ends here
