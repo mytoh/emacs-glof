@@ -279,13 +279,7 @@
      (glof:get-in (glof:get p k) kr default))
     ((seq k &rest kr)
      (glof:get-in (glof:get p k)
-               kr default))
-    ((and (guard (consp p))
-          (seq (and k
-                    (guard (not (glof:contains-p p k))))
-               &rest _kr))
-     default)
-    ))
+               kr default))))
 
 (cl-defun glof:update (p k f)
   (declare (pure t))
