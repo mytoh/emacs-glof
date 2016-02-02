@@ -6,6 +6,8 @@
 (require 'subr-x)
 (require 'pcase)
 
+(require 'colle)
+
 (cl-defun glof:plist (&rest kvs)
   (declare (pure t))
   (apply #'list kvs))
@@ -121,9 +123,9 @@
 (cl-defun glof:assoc-in (p ks v)
   (declare (pure t))
   (pcase ks
-    ((pred glof::seq-empty-p) p)
+    ((pred colle:empty-p) p)
     ((seq k
-          (pred  glof::seq-empty-p))
+          (pred colle:empty-p))
      
      (glof:assoc p k v))
     ((seq k &rest kr)
@@ -260,14 +262,14 @@
 (cl-defun glof:get-in (p ks &optional (default nil))
   (declare (pure t))
   (pcase ks
-    ((pred glof::seq-empty-p)
+    ((pred colle:empty-p)
      p)
     ((and (guard (vectorp p))
           (seq (and k
                     (pred numberp))
-               (pred glof::seq-empty-p)))
+               (pred colle:empty-p)))
      (glof:get p k default))
-    ((seq k (pred glof::seq-empty-p))
+    ((seq k (pred colle:empty-p))
      (glof:get p k default))
     ((and (guard (consp p))
           (seq (and k
