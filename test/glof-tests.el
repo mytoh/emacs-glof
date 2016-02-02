@@ -118,7 +118,8 @@
      (glof:get p :b 0) 2
      (glof:get p :f 0) nil
      (glof:get () :a) nil
-     (glof:get () nil) nil)))
+     (glof:get () nil) nil
+     (glof:get [0 1 2] 1) 1)))
 
 (ert-deftest glof-tests-assoc ()
   (cl-letf ((m '(:a 1 :b 2)))
