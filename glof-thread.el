@@ -28,10 +28,12 @@
    forms))
 
 (cl-defmacro glof:-> (expr &rest forms)
+  (declare (indent 1))
   `(thread-first ,expr
      ,@(glof::thread-transform t forms)))
 
 (cl-defmacro glof:->> (expr &rest forms)
+  (declare (indent 1))
   `(thread-last ,expr
      ,@(glof::thread-transform nil forms)))
 

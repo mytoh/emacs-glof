@@ -20,18 +20,18 @@
     (`(,p nil) p)
     (`(,p ,x)
       (glof:conj (glof:rest p)
-              (cl-letf ((found (glof:contains-p
-                                x (glof:name (glof:first p)))))
-                (if found
-                    x
-                  (seq-concatenate 'list
-                                   (glof:first p)
-                                   x)))))
+             (cl-letf ((found (glof:contains-p
+                               x (glof:name (glof:first p)))))
+               (if found
+                   x
+                 (seq-concatenate 'list
+                                  (glof:first p)
+                                  x)))))
     (`(,p ,x nil)
       (glof:conj p x))
     (`(,p ,x ,x2 . ,xs)
       (glof:conj (glof:conj p x)
-              x2 xs))))
+             x2 xs))))
 
 
 (cl-defun glof:name (p)
@@ -54,7 +54,7 @@
         ,v)
       v)
     ((and (pred vectorp)
-          (guard (numberp key)))
+        (guard (numberp key)))
      (seq-elt p key))
     (`(,(and k (guard (not (cl-equalp key k))))
         ,_)
@@ -115,7 +115,7 @@
         (rec plist nil)))
     (`(,k ,v)
       (glof:assoc (glof:assoc plist key value)
-               k  v))
+              k  v))
     (`(,k ,v . ,rkv)
       (apply #'glof:assoc (glof:assoc plist key value)
              k v rkv))))
@@ -143,7 +143,7 @@
     (`(,(pred (cl-equalp (glof:name (glof:first p)))))
       (glof:rest p))
     (`(,(and k
-             (guard (not (cl-equalp k (glof:name (glof:first p)))))))
+           (guard (not (cl-equalp k (glof:name (glof:first p)))))))
       (append
        (glof:first p)
        (glof:dissoc (glof:rest p) k)))
@@ -151,7 +151,7 @@
       (glof:dissoc p k))
     (`(,k ,k2 . ,ks)
       (glof:dissoc (glof:dissoc p k)
-                k2 ks))))
+               k2 ks))))
 
 (cl-defun glof:alistify (p)
   (declare (pure t))
@@ -205,10 +205,9 @@
   (declare (pure t))
   (seq-mapcat
    (pcase-lambda ((and k (pred (glof:contains-p p))))
-       (cl-letf ((found (glof:get p k :not-found)))
-         (pcase found
-           (:not-found nil)
-           (_ (glof:prop k found)))))
+       (pcase (glof:get p k)
+         (`() nil)
+         (found (glof:prop k found))))
    keys))
 
 (cl-defun glof:last (p)
@@ -224,8 +223,8 @@
     (`() z)
     (_
      (funcall f (glof:first p)
-              (glof:foldr f z
-                       (glof:rest p))))))
+        (glof:foldr f z
+                (glof:rest p))))))
 
 (cl-defun glof:foldl (f z p)
   (declare (pure t))
@@ -233,15 +232,15 @@
     (`() z)
     (_
      (glof:foldl f
-              (funcall f z (glof:first p))
-              (glof:rest p)))))
+             (funcall f z (glof:first p))
+             (glof:rest p)))))
 
 (cl-defun glof:unfold (p h ns x)
   (pcase (funcall p x)
     (`t ())
     (_
      (glof:conj (funcall h x)
-             (glof:unfold p h ns (funcall ns x))))))
+            (glof:unfold p h ns (funcall ns x))))))
 
 (cl-defun glof:entry-p (p)
   (declare (pure t))
@@ -255,7 +254,7 @@
         . ,_)
       t)
     (`(,(and ki
-             (guard (not (cl-equalp k ki))))
+           (guard (not (cl-equalp k ki))))
         ,_ . ,kvr)
       (glof:contains-p kvr k))))
 
@@ -265,29 +264,29 @@
     ((pred colle:empty-p)
      p)
     ((and (guard (vectorp p))
-          (seq (and k
-                    (pred numberp))
-               (pred colle:empty-p)))
+        (seq (and k
+                (pred numberp))
+             (pred colle:empty-p)))
      (glof:get p k default))
     ((seq k (pred colle:empty-p))
      (glof:get p k default))
     ((and (guard (consp p))
-          (seq (and k
-                    (guard (not (glof:contains-p p k))))))
+        (seq (and k
+                (guard (not (glof:contains-p p k))))))
      default)
     ((and (guard (vectorp p))
-          (seq (and k
-                    (pred numberp))
-               &rest kr))
+        (seq (and k
+                (pred numberp))
+             &rest kr))
      (glof:get-in (glof:get p k) kr default))
     ((seq k &rest kr)
      (glof:get-in (glof:get p k)
-               kr default))))
+              kr default))))
 
 (cl-defun glof:update (p k f)
   (declare (pure t))
   (glof:assoc p k
-           (funcall f (glof:get p k))))
+          (funcall f (glof:get p k))))
 
 (cl-defun glof:zipmap (keys vals)
   ;; [[https://www.youtube.com/watch?v=n7aE6k8o_BU]]
@@ -298,8 +297,8 @@
     (`((,_ . ,_) nil) nil)
     (`((,kf . ,kr) (,vf . ,vr))
       (glof:conj (glof:zipmap kf vf)
-              (glof:zipmap
-               kr vr)))
+             (glof:zipmap
+              kr vr)))
     (`(,k ,v)
       (glof:assoc () k v))))
 
@@ -325,14 +324,14 @@
                                (glof:string thing))))
     
     (`(,(and (app type-of `symbol)
-             (pred keywordp)
-             thing))
+           (pred keywordp)
+           thing))
       thing)
     (`(,(and (app type-of `symbol)
-             thing))
+           thing))
       (glof:keyword (symbol-name thing)))
     ( `(,(and (app type-of `string)
-              thing))
+            thing))
        (intern (seq-concatenate 'string
                                 ":" thing)))))
 
@@ -341,7 +340,7 @@
   (pcase (type-of thing)
     (`string thing)
     ((and `symbol
-          (guard (keywordp thing)))
+        (guard (keywordp thing)))
      (seq-drop (symbol-name thing)
                1))
     (`symbol
@@ -364,7 +363,7 @@
 
 (cl-defun glof::seq-empty-p (sequence)
   (and (seqp sequence)
-       (seq-empty-p sequence)))
+     (seq-empty-p sequence)))
 
 (cl-defun glof:find (p k)
   (declare (pure t))
@@ -394,6 +393,10 @@
        (glof:conj (glof:plist k (funcall f v)) a))
    (glof:empty)
    p))
+
+
+(cl-defun glof:call (p f &rest args)
+  (apply #'funcall (glof:get p f) args))
 
 
 ;; (cl-letf ((plist '(:a 1 :b 2 :c 3)))

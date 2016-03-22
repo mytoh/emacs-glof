@@ -1,0 +1,158 @@
+#+link: core http://clojuredocs.org/clojure_core/clojure.core/%s
+#+link: set http://clojuredocs.org/clojure_core/clojure.set/%s
+
+* glove
+- glove:gen (&rest kvs)
+- glove:conj (&rest plists)
+- glove:key (plist)
+- glove:val (plist)
+- glove:get (plist key)
+- glove:first (plist)
+- glove:rest (plist)
+- glove:keys (plist)
+- glove:vals (plist)
+- glove:assoc (plist key value &rest kvs)
+- glove:dissoc (plist &rest keys)
+- glove:->alist (plist)
+- glove:sort-by (plist)
+- glove:map (f plist)
+- glove:select-keys (plist keys)
+
+** todo
+- merge
+- find
+- filter
+- reduce-kv
+*** fmap, map-kv
+(defmethod fmap clojure.lang.IPersistentMap
+  [f m]
+  (into (empty m) (for [[k v] m] [k (f v)])))
+
+#+begin_src emacs-lisp
+(fmap (lambda (v) (+ 1 v)) '(:a 1 :b 2))
+ ;=> '(:a 2 :b 3)
+#+end_src
+
+
+* clojure [[http://clojure.org/cheatsheet][Clojure - cheatsheet]]
+** Maps
+*** Create unsorted
+- {}
+- [[core:hash-map][hash-map]]
+- [[core:zipmap][zipmap]]
+- [[core:frequencies][frequencies]]
+- [[core:group-by][group-by]]
+- [[set:index][index]]
+
+*** Examine
+(my-map k) → ( get my-map k)
+(:key my-map) → ( get my-map :key)
+- [[core:get-in][get-in]]
+- [[core:contains_q][contains?]]
+- [[core:find][find]]
+- [[core:keys][keys]]
+- [[core:vals][vals]]
+
+*** 'Change'
+- [[core:assoc][assoc]]
+- [[core:assoc-in][assoc-in]]
+- [[core:dissoc][dissoc]]
+- [[core:merge][merge]]
+- [[core:merge-with][merge-with]]
+- [[core:select-keys][select-keys]]
+- [[core:update-in][update-in]]
+- [[core:update][update]]
+- [[set:rename-keys][rename-keys]]
+- [[set:map-invert][map-invert]]
+- [[http://github.com/weavejester/medley][Medley]]
+
+*** Ops
+- [[core:reduce-kv][reduce-kv]]
+
+*** Entry
+- [[core:key][key]]
+- [[core:val][val]]
+
+*** Sorted maps
+rseq subseq rsubseq
+
+** cats.labs.lens
+Haskell's lens in clojure
+https://github.com/funcool/cats/blob/master/src/cats/labs/lens.cljc
+
+[[http://funcool.github.io/cats/latest/#lens]]
+There’s key and select-keys for focusing on one or multiple keys respectively:
+#+begin_src clojure
+
+(l/focus (l/key :a) {:a 1 :b 2})
+;; => 1
+
+(l/over (l/key :a) str {:a 1 :b 2})
+;; => {:a "1", :b 2}
+
+(l/put (l/key :a) 42 {:a 1 :b 2})
+;; => {:a 42, :b 2}
+
+(l/focus (l/select-keys [:a]) {:a 1 :b 2})
+;; => {:a 1}
+
+(l/over (l/select-keys [:a :c])
+        (fn [m]
+         (zipmap (keys m) (repeat 42)))
+        {:a 1 :b 2})
+;; => {:b 2, :a 42}
+
+(l/put (l/select-keys [:a :c])
+       {:a 0}
+       {:a 1 :b 2 :c 42})
+;; => {:b 2, :a 0}
+
+#+end_src
+
+ in for focusing on a path:
+#+begin_src clojure
+
+(l/focus (l/in [:a :b])
+         {:a {:b {:c 42}}})
+;; => {:c 42}
+
+(l/over (l/in [:a :b])
+        (fn [m]
+         (zipmap (vals m) (keys m)))
+        {:a {:b {:c 42}}})
+;; => {:a {:b {42 :c}}}
+
+(l/put (l/in [:a :b])
+       42
+       {:a {:b {:c 42}}})
+;; => {:a {:b 42}}
+#+end_src
+
+* reduce, fold
+** [[https://en.wikipedia.org/wiki/Fold_(higher-order_function)][Fold (higher-order function) - Wikipedia, the free encyclopedia]]
+| Language    | Left fold                                 | Right fold                                            | Left fold without initial value    | Right fold without initial value    | Notes                               |
+|-------------+-------------------------------------------+-------------------------------------------------------+------------------------------------+-------------------------------------+-------------------------------------|
+| Clojure     | (reduce func initval list)                | (reduce func initval (reverse list'))                 | (reduce func list)                 | (reduce func (reverse list))        | See also clojure.core.reducers/fold |
+| Common Lisp | (reduce func list :initial-value initval) | (reduce func list :from-end t :initial-value initval) | (reduce func list)                 | (reduce func list :from-end t)      |                                     |
+| Haskell     | foldl func initval list                   | foldr func initval list                               | foldl1 func list                   | foldr1 func list                    |                                     |
+| Scheme R6RS | (fold-left func initval list)             | (fold-right func initval list)                        | (reduce-left func defaultval list) | (reduce-right func defaultval list) | srfi/1 srfi/43                      |
+|             | (vector-fold func initval vector)         | (vector-fold-right func initval vector)               |                                    |                                     |                                     |
+
+* haskell
+** Data.Map
+- [[http://book.realworldhaskell.org/read/data-structures.html][Chapter 13. Data Structures]]
+- [[https://downloads.haskell.org/~ghc/7.8.2/docs/html/libraries/containers-0.5.5.1/Data-Map-Lazy.html][Data.Map.Lazy]]
+** Data.HashMap.Strict
+[[https://hackage.haskell.org/package/unordered-containers-0.2.5.1/docs/Data-HashMap-Strict.html][Data.HashMap.Strict]]
+
+* scheme
+** R7RS, ImmutableDataStructuresWortman – Scheme Working Groups
+[[http://trac.sacrideo.us/wg/wiki/ImmutableDataStructuresWortman?version=25][ImmutableDataStructuresWortman – Scheme Working Groups]]
+
+* idris
+** Data.SortedMap
+[[https://github.com/idris-lang/Idris-dev/blob/master/libs/contrib/Data/SortedMap.idr][Idris-dev/SortedMap.idr at master · idris-lang/Idris-dev · GitHub]]
+
+** Elm
+**** Dict
+[[https://github.com/elm-lang/core/blob/master/src/Dict.elm][core/Dict.elm at master · elm-lang/core · GitHub]]
