@@ -4,6 +4,8 @@
 
 ;;; Code:
 
+(require 'cl-lib)
+
 (cl-defun glof:lookup (key p)
   (declare (pure t))
   (pcase p
@@ -19,13 +21,15 @@
       `[:just ,v])
     (`(,(and k (guard (not (cl-equalp key k))))
         ,_ . ,_)
-      (glof:lookup key (glof:rest p)))))
+      (glof:lookup key (cddr p)))))
 
-(assert (glof:lookup :a '(:a 1 :b 2))
+(cl-assert (glof:lookup :a '(:a 1 :b 2))
         [:just 1])
-(assert (glof:lookup :b '(:a 1 :b 2))
+(cl-assert (glof:lookup :b '(:a 1 :b 2))
         [:just 2])
-(assert (glof:lookup :c '(:a 1 :b 2))
-        [:nothing])
+(cl-assert (glof:lookup :c '(:a 1 :b 2))
+	   [:nothing])
+
+(provide 'glof-lookup)
 
 ;;; glof-lookup.el ends here
