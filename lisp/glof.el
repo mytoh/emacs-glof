@@ -10,6 +10,9 @@
 
 (require 'glof-lookup)
 (require 'glof-let)
+(require 'glof-null)
+(require 'glof-size)
+(require 'glof-member)
 
 (cl-defun glof:plist (&rest kvs)
   (declare (pure t))
@@ -366,7 +369,7 @@
 
 (cl-defun glof::seq-empty-p (sequence)
   (and (seqp sequence)
-     (seq-empty-p sequence)))
+       (seq-empty-p sequence)))
 
 (cl-defun glof:find (p k)
   (declare (pure t))
