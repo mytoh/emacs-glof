@@ -14,16 +14,16 @@
 
 (cl-defmacro glof-test-helper-are (&rest tests)
   (and tests
-       `(progn
-          (glof-test-helper-is ,(car tests) ,(cadr tests))
-          (glof-test-helper-are ,@(cddr tests)))))
+     `(progn
+        (glof-test-helper-is ,(car tests) ,(cadr tests))
+        (glof-test-helper-are ,@(cddr tests)))))
 
 (cl-defmacro glof-test-helper-are-form (vars form &rest tests)
   (cl-letf ((lvars (length vars)))
     (and tests
-         `(progn
-            (should ((lambda ,vars ,form) ,@(seq-take tests lvars)))
-            (glof-test-helper-are ,vars ,form ,@(seq-drop tests lvars))))))
+       `(progn
+          (should ((lambda ,vars ,form) ,@(seq-take tests lvars)))
+          (glof-test-helper-are ,vars ,form ,@(seq-drop tests lvars))))))
 
 ;;  prefer (should (eql EXPECTED ACTUAL))
 
@@ -119,6 +119,7 @@
      (glof:get p :f 0) nil
      (glof:get () :a) nil
      (glof:get () nil) nil
+     (glof:get () :a t) t
      (glof:get [0 1 2] 1) 1)))
 
 (ert-deftest glof-tests-assoc ()

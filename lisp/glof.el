@@ -55,7 +55,10 @@
 (cl-defun glof:get (p key &optional (default nil))
   (declare (pure t))
   (pcase p
-    (`() (glof:empty))
+    (`()
+      (pcase default
+        (`nil nil)
+        (_ default)))
     (`(,(pred (cl-equalp key))
         ,v)
       v)
@@ -270,20 +273,20 @@
     ((pred colle:empty-p)
      p)
     ((and (guard (vectorp p))
-          (seq (and k
-                  (pred numberp))
-               (pred colle:empty-p)))
+        (seq (and k
+                (pred numberp))
+             (pred colle:empty-p)))
      (glof:get p k default))
     ((seq k (pred colle:empty-p))
      (glof:get p k default))
     ((and (guard (consp p))
-          (seq (and k
-                  (guard (not (glof:contains-p p k))))))
+        (seq (and k
+                (guard (not (glof:contains-p p k))))))
      default)
     ((and (guard (vectorp p))
-          (seq (and k
-                  (pred numberp))
-               &rest kr))
+        (seq (and k
+                (pred numberp))
+             &rest kr))
      (glof:get-in (glof:get p k) kr default))
     ((seq k &rest kr)
      (glof:get-in (glof:get p k)
@@ -330,14 +333,14 @@
                                (glof:string thing))))
     
     (`(,(and (app type-of `symbol)
-             (pred keywordp)
-             thing))
+           (pred keywordp)
+           thing))
       thing)
     (`(,(and (app type-of `symbol)
-             thing))
+           thing))
       (glof:keyword (symbol-name thing)))
     ( `(,(and (app type-of `string)
-              thing))
+            thing))
        (intern (seq-concatenate 'string
                                 ":" thing)))))
 
@@ -369,7 +372,7 @@
 
 (cl-defun glof::seq-empty-p (sequence)
   (and (seqp sequence)
-       (seq-empty-p sequence)))
+     (seq-empty-p sequence)))
 
 (cl-defun glof:find (p k)
   (declare (pure t))
