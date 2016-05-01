@@ -20,6 +20,8 @@
         ,_ . ,_)
       [:false])
     (`(,x ,v . ,r)
-      (glof:not-member n r))))
+     (glof:not-member n r))))
+
+(provide 'glof-member)
 
 ;;; glof-member.el ends here
