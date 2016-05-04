@@ -24,7 +24,6 @@
                (pcase (glof:lookup ,(cadr (car (car bindings)))
                                ,(cadr bindings))
                  (`[:nothing]
-                   (message "fuck")
                    (if ,(caddr (car (car bindings)))
                        ,(caddr (car (car bindings)))
                      nil))
@@ -32,7 +31,7 @@
                    x))))
             (glof:let ,(list (cdr (car bindings))
                              (cadr bindings))
-                      ,@body)))))
+              ,@body)))))
 
 (provide 'glof-let)
 
