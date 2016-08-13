@@ -5,8 +5,9 @@
 ;;; Code:
 
 ;; (glof:case '(:a (:A B) :b 2 :c 3)
-;;   (:a `(,a ,b)
-;;       a)
+;;   ((:a `(,a ,b) ;; TODO accept more predicates
+;;        :c 3)
+;;    a)
 ;;   (:b 2
 ;;       :two))
 

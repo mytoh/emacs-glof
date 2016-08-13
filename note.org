@@ -267,3 +267,5 @@ There’s key and select-keys for focusing on one or multiple keys respectively:
 ** Elm
 **** Dict
 [[https://github.com/elm-lang/core/blob/master/src/Dict.elm][core/Dict.elm at master · elm-lang/core · GitHub]]
+
+* intern, make-symbol or intern-symbol ?
