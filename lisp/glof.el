@@ -171,16 +171,19 @@
     (glof:empty)
     p)))
 
-(cl-defun glof:sort-by (p)
+(cl-defun glof:sort-by (p pred)
   (declare (pure t))
   (cl-letf* ((alist (glof:alistify p))
              (sorted
-              (sort alist
-                    (pcase-lambda (`(,a . ,_) `(,b . ,_))
-                        (string< a b)))))
+              (cl-sort alist
+                       (pcase-lambda (`(,a . ,_) `(,b . ,_))
+                           (funcall pred a b)))))
     (seq-mapcat
      (pcase-lambda (`(,k . ,v)) (glof:prop k v))
      sorted)))
+
+(cl-defun glof:sort (p)
+  (glof:sort-by p #'string<))
 
 ;; [[http://www.cs.toronto.edu/~dianaz/Example_LispPart1.html]]
 ;; (defun glof:sort (p)
@@ -270,7 +273,8 @@
 (cl-defun glof:get-in (p ks &optional (default nil))
   (declare (pure t))
   (pcase ks
-    ((pred colle:empty-p)
+    ((and (pred seqp)
+        (pred colle:empty-p))
      p)
     ((and (guard (vectorp p))
         (seq (and k
@@ -403,6 +407,14 @@
 (cl-defun glof:call (p f &rest args)
   (apply #'funcall (glof:get p f) args))
 
+(cl-defmacro glof:do ((n v plist) &body body)
+  (cl-letf ((p (gensym "glof-do-")))
+    `(cl-letf ((,p ,plist))
+       (while ,p
+         (cl-letf ((,n (car ,p))
+                   (,v (cadr ,p)))
+           ,@body)
+         (setq ,p (cddr ,p))))))
 
 ;; (cl-letf ((plist '(:a 1 :b 2 :c 3)))
 ;;   (glof:let (((a b c) plist))
