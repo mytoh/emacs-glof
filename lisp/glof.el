@@ -416,6 +416,19 @@
            ,@body)
          (setq ,p (cddr ,p))))))
 
+
+(cl-defun glof:ns (ns p)
+  (glof:foldr
+   (lambda (e r)
+     (append (list (glof:keyword ns (glof:name e))
+                   (glof:value e))
+             r))
+   ()
+   p))
+
+;; (glof:ns 'my '(:a 1 ::b 2))
+
+
 ;; (cl-letf ((plist '(:a 1 :b 2 :c 3)))
 ;;   (glof:let (((a b c) plist))
 ;;             `(,a ,b ,c)))
