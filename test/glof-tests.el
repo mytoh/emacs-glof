@@ -36,10 +36,10 @@
 
    (glof:conj () '(:a 1 :b 2)) '(:a 1 :b 2)
 
-   (glof:sort-by (glof:conj () '(:a 1 :b 2) '(:c 3)))
+   (glof:sort (glof:conj () '(:a 1 :b 2) '(:c 3)))
    '(:a 1 :b 2 :c 3)
 
-   (glof:sort-by (glof:conj () '(:a 1 :b 2) '(:a 3 :c 4)))
+   (glof:sort (glof:conj () '(:a 1 :b 2) '(:a 3 :c 4)))
    '(:a 3 :b 2 :c 4)
 
    (glof:conj '(:a 1) '(:a 7)) '(:a 7)
@@ -48,10 +48,10 @@
 
    (glof:conj '(:a 1) '(:a 7 :b 2)) '(:a 7 :b 2)
 
-   (glof:sort-by (glof:conj '(:a 1) '(:a 7 :b 2) '(:c 3)))
+   (glof:sort (glof:conj '(:a 1) '(:a 7 :b 2) '(:c 3)))
    '(:a 7 :b 2 :c 3)
 
-   (glof:sort-by (glof:conj '(:a 1) '(:a 7 :b 2) '(:b 4 :c 5)))
+   (glof:sort (glof:conj '(:a 1) '(:a 7 :b 2) '(:b 4 :c 5)))
    '(:a 7 :b 4 :c 5)
 
    (glof:conj () (glof:first '(:a 1)))
@@ -63,7 +63,7 @@
    (glof:conj '(:a 1) (glof:first '(:a 7)))
    '(:a 7)
 
-   (glof:sort-by (glof:conj '(:a 1) (glof:first '(:b 2)) (glof:first '(:a 5))))
+   (glof:sort (glof:conj '(:a 1) (glof:first '(:b 2)) (glof:first '(:a 5))))
    '(:a 5 :b 2)
 
    ;; nil list check (not necessary?)
@@ -78,11 +78,11 @@
    ))
 
 
-(ert-deftest glof-tests-sort-by ()
+(ert-deftest glof-tests-sort ()
   (glof-test-helper-are
-   (glof:sort-by '(:b 2 :a 1))
+   (glof:sort '(:b 2 :a 1))
    '(:a 1 :b 2)
-   (glof:sort-by '(:b 2 :c 3 :a 1))
+   (glof:sort '(:b 2 :c 3 :a 1))
    '(:a 1 :b 2 :c 3)))
 
 ;; (ert-deftest glof-tests-sort ()
@@ -142,10 +142,10 @@
    (glof:assoc () nil 1)
    '(nil 1)
 
-   (glof:sort-by (glof:assoc () :b -2 :a 2))
+   (glof:sort (glof:assoc () :b -2 :a 2))
    '(:a 2 :b -2)
 
-   (glof:sort-by
+   (glof:sort
     (glof:assoc () :b -2 :a 2 :c 3))
    '(:a 2 :b -2 :c 3)))
 
