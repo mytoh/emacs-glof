@@ -396,6 +396,12 @@
 
 ;; TODO
 ;; clojure/algo.generic 
+(cl-defun glof:map-values (f p)
+  (glof:foldr
+   (pcase-lambda (`(,k ,v) a)
+     (glof:conj (glof:plist k (funcall f v)) a))
+   (glof:empty)
+   p))
 (cl-defun glof:map-names (f p)
   (glof:foldr
    (pcase-lambda (`(,k ,v) a)
