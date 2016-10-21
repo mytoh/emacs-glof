@@ -423,13 +423,12 @@
          (setq ,p (cddr ,p))))))
 
 
+;; glof:ns
+;; (glof:ns 'my '(:a 1 ::b 2))
 (cl-defun glof:ns (ns p)
-  (glof:foldr
-   (lambda (e r)
-     (append (list (glof:keyword ns (glof:name e))
-                   (glof:value e))
-             r))
-   ()
+  (glof:map-names
+   (lambda (n)
+     (glof:keyword ns n))
    p))
 
 ;; (glof:ns 'my '(:a 1 ::b 2))
