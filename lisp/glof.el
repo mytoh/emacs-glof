@@ -105,7 +105,7 @@
    ()
    p))
 
-(cl-defun glof:assoc (plist key value &rest kvs)
+(cl-defun glof:assoc (plist key value . kvs)
   (declare (pure t))
   (pcase kvs
     (`()
@@ -140,7 +140,7 @@
     ((seq k &rest kr)
      (glof:assoc p k (glof:assoc-in (glof:get p k) kr v)))))
 
-(cl-defun glof:dissoc (p &rest keys)
+(cl-defun glof:dissoc (p . keys)
   (declare (pure t))
   (pcase keys
     (`()
