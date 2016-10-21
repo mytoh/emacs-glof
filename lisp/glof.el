@@ -432,6 +432,19 @@
    p))
 
 ;; (glof:ns 'my '(:a 1 ::b 2))
+;; glof:diff
+;; clojure.data/diff
+(defun glof:diff (a b)
+  "clojure.data/diff"
+  )
+
+(defun glof:keywordize-keys (p)
+  "[[https://clojuredocs.org/clojure.walk/keywordize-keys][keywordize-keys - clojure.walk | ClojureDocs - Community-Powered Clojure Docu...]]"
+  )
+;; [[https://clojuredocs.org/clojure.walk/stringify-keys][stringify-keys - clojure.walk | ClojureDocs - Community-Powered Clojure Docum...]]
+(defun glof:stringify-keys (p)
+  "docstring"
+  )
 
 
 ;; (cl-letf ((plist '(:a 1 :b 2 :c 3)))
