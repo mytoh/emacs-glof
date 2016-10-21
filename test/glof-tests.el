@@ -104,7 +104,7 @@
      (glof:values m) '(1 2)
      (glof:map
       (pcase-lambda (`(,k ,v))
-          (list k (1+ v)))
+        (list k (1+ v)))
       m)
      '(:a 2 :b 3))))
 
@@ -198,7 +198,7 @@
   (glof-test-helper-are
    (glof:foldl
     (pcase-lambda (`(_ ,a) `(_ ,b))
-        (glof:plist :result (+ a b)))
+      (glof:plist :result (+ a b)))
     '(:result 0)
     '(:a 1 :b 2 :c 3))
    '(:result 6)))
@@ -207,7 +207,7 @@
   (glof-test-helper-are
    (glof:foldr
     (pcase-lambda (`(_ ,a) `(_ ,b))
-        (glof:plist :result (+ a b)))
+      (glof:plist :result (+ a b)))
     '(:result 0)
     '(:a 1 :b 2 :c 3))
    '(:result 6)))
@@ -218,14 +218,14 @@
      (glof:unfold
       #'null
       (pcase-lambda (`(,k ,v . ,_))
-          (glof:plist
-           k (* v v)))
+        (glof:plist
+         k (* v v)))
       #'glof:rest
       plist)
      (glof:map
       (pcase-lambda (`(,k ,v))
-          (glof:plist
-           k (* v v)))
+        (glof:plist
+         k (* v v)))
       plist))))
 
 (ert-deftest glof-tests-contains-p ()
