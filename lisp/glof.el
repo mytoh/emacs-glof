@@ -63,7 +63,7 @@
        ,v)
      v)
     ((and (pred vectorp)
-          (guard (numberp key)))
+        (guard (numberp key)))
      (seq-elt p key))
     (`(,(and k (guard (not (cl-equalp key k))))
        ,_)
@@ -172,7 +172,6 @@
     p)))
 
 (cl-defun glof:sort-by (p pred)
-  (declare (pure t))
   (cl-letf* ((alist (glof:alistify p))
              (sorted
               (cl-sort alist
@@ -230,16 +229,14 @@
     (_ (glof:last (glof:rest p)))))
 
 (cl-defun glof:foldr (f z p)
-  (declare (pure t))
   (pcase p
     (`() z)
     (_
      (funcall f (glof:first p)
-        (glof:foldr f z
-                (glof:rest p))))))
+         (glof:foldr f z
+                 (glof:rest p))))))
 
 (cl-defun glof:foldl (f z p)
-  (declare (pure t))
   (pcase p
     (`() z)
     (_
@@ -297,7 +294,6 @@
               kr default))))
 
 (cl-defun glof:update (p k f)
-  (declare (pure t))
   (glof:assoc p k
           (funcall f (glof:get p k))))
 
