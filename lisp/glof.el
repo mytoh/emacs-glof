@@ -15,11 +15,13 @@
 (require 'glof-member)
 
 (cl-defun glof:plist (&rest kvs)
-  (declare (pure t))
+  (declare (pure t)
+           (side-effect-free t))
   (apply #'list kvs))
 
 (cl-defun glof:conj (&rest plists)
-  (declare (pure t))
+  (declare (pure t)
+           (side-effect-free t))
   (pcase plists
     (`(nil nil) (glof:empty))
     (`(nil ,x) x)
@@ -41,19 +43,22 @@
 
 
 (cl-defun glof:name (p)
-  (declare (pure t))
+  (declare (pure t)
+           (side-effect-free t))
   (pcase p
     (`(,n ,_)
      n)))
 
 (cl-defun glof:value (p)
-  (declare (pure t))
+  (declare (pure t)
+           (side-effect-free t))
   (pcase p
     (`(,_ ,v)
      v)))
 
 (cl-defun glof:get (p key &optional (default nil))
-  (declare (pure t))
+  (declare (pure t)
+           (side-effect-free t))
   (pcase p
     (`()
      (pcase default
@@ -76,21 +81,25 @@
      (glof:get (glof:rest p) key default))))
 
 (cl-defun glof:first (p)
-  (declare (pure t))
+  (declare (pure t)
+           (side-effect-free t))
   (pcase-let ((`(,key ,value . ,_)
                p))
     `(,key ,value)))
 
 (cl-defun glof:second (p)
-  (declare (pure t))
+  (declare (pure t)
+           (side-effect-free t))
   (glof:first (glof:rest p)))
 
 (cl-defun glof:rest (p)
-  (declare (pure t))
+  (declare (pure t)
+           (side-effect-free t))
   (cddr p))
 
 (cl-defun glof:names (p)
-  (declare (pure t))
+  (declare (pure t)
+           (side-effect-free t))
   (glof:foldr
    (pcase-lambda (`(,n ,v) a)
      (cons n a))
@@ -98,7 +107,8 @@
    p))
 
 (cl-defun glof:values (p)
-  (declare (pure t))
+  (declare (pure t)
+           (side-effect-free t))
   (glof:foldr
    (pcase-lambda (`(,n ,v) a)
      (cons v a))
@@ -106,7 +116,8 @@
    p))
 
 (cl-defun glof:assoc (plist key value . kvs)
-  (declare (pure t))
+  (declare (pure t)
+           (side-effect-free t))
   (pcase kvs
     (`()
      (cl-labels ((rec (p flag)
@@ -130,7 +141,8 @@
             k v rkv))))
 
 (cl-defun glof:assoc-in (p ks v)
-  (declare (pure t))
+  (declare (pure t)
+           (side-effect-free t))
   (pcase ks
     ((pred colle:empty-p) p)
     ((seq k
@@ -141,7 +153,8 @@
      (glof:assoc p k (glof:assoc-in (glof:get p k) kr v)))))
 
 (cl-defun glof:dissoc (p . keys)
-  (declare (pure t))
+  (declare (pure t)
+           (side-effect-free t))
   (pcase keys
     (`()
      p)
@@ -163,7 +176,8 @@
               k2 ks))))
 
 (cl-defun glof:alistify (p)
-  (declare (pure t))
+  (declare (pure t)
+           (side-effect-free t))
   (seq-reverse
    (glof:foldl
     (pcase-lambda (r `(,k ,v))
@@ -213,7 +227,8 @@
    p))
 
 (cl-defun glof:select-keys (p keys)
-  (declare (pure t))
+  (declare (pure t)
+           (side-effect-free t))
   (seq-mapcat
    (pcase-lambda ((and k (pred (glof:contains-p p))))
      (pcase (glof:get p k)
@@ -222,7 +237,8 @@
    keys))
 
 (cl-defun glof:last (p)
-  (declare (pure t))
+  (declare (pure t)
+           (side-effect-free t))
   (pcase p
     (`() (glof:empty))
     (`(,k ,v) (glof:plist k v))
@@ -252,11 +268,13 @@
             (glof:unfold p h ns (funcall ns x))))))
 
 (cl-defun glof:entry-p (p)
-  (declare (pure t))
+  (declare (pure t)
+           (side-effect-free t))
   (= 2 (seq-length p)))
 
 (cl-defun glof:contains-p (p k)
-  (declare (pure t))
+  (declare (pure t)
+           (side-effect-free t))
   (pcase p
     (`() (glof:empty))
     (`(,(pred (cl-equalp k))
@@ -268,7 +286,8 @@
      (glof:contains-p kvr k))))
 
 (cl-defun glof:get-in (p ks &optional (default nil))
-  (declare (pure t))
+  (declare (pure t)
+           (side-effect-free t))
   (pcase ks
     ((and (pred seqp)
         (pred colle:empty-p))
@@ -299,7 +318,8 @@
 
 (cl-defun glof:zipmap (keys vals)
   ;; [[https://www.youtube.com/watch?v=n7aE6k8o_BU]]
-  (declare (pure t))
+  (declare (pure t)
+           (side-effect-free t))
   (pcase `(,keys ,vals)
     (`(nil nil) nil)
     (`(nil (,_ . ,_)) nil)
@@ -323,7 +343,8 @@
      (apply #'glof:merge (glof:merge a b) r))))
 
 (cl-defun glof:keyword (&rest names)
-  (declare (pure t))
+  (declare (pure t)
+           (side-effect-free t))
   (pcase names
     (`(,ns ,thing)
      (intern (seq-concatenate 'string
@@ -345,7 +366,8 @@
                                ":" thing)))))
 
 (cl-defun glof:string (thing)
-  (declare (pure t))
+  (declare (pure t)
+           (side-effect-free t))
   (pcase (type-of thing)
     (`string thing)
     ((and `symbol
@@ -356,11 +378,13 @@
      (symbol-name thing))))
 
 (cl-defun glof:empty (&optional _x)
-  (declare (pure t))
+  (declare (pure t)
+           (side-effect-free t))
   ())
 
 (cl-defun glof:eieio->plist (object)
-  (declare (pure t))
+  (declare (pure t)
+           (side-effect-free t))
   (cl-letf* ((class (eieio-object-class object))
              (slots (eieio-class-slots class)))
     (seq-mapcat
@@ -375,7 +399,8 @@
      (seq-empty-p sequence)))
 
 (cl-defun glof:find (p k)
-  (declare (pure t))
+  (declare (pure t)
+           (side-effect-free t))
   (pcase p
     (`() ())
     (`(,(pred (cl-equalp k)) . ,_)
